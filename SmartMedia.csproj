@@ -225,6 +225,9 @@
     <Compile Update="Modules\PushContent\AddImagePost.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Modules\PushContent\ImportDatas.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Modules\PushContent\ModuleMain.cs" />
     <Compile Update="Resource.Designer.cs">
       <DesignTime>True</DesignTime>

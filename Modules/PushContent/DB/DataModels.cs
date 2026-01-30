@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using XS.Data2.LiteDBBase;
 using XS.Core2.XsExtensions;
+using System.Text.Json.Serialization;
 namespace SmartMedia.Modules.PushContent.DB;
 
 [LiteTable("PushContent")]// 发布内容的表，目前包括视频，音频，文章
@@ -26,7 +27,10 @@ public class PushInfo : LiteModelBaseInt
 
     public string Sites { get; set; } // 发布站点的配置，目前主要包含分类配置
 
-    public long PublishTimeStamp { get; set; }  // Unix 时间戳（秒或毫秒），如果等于0表示未开启定时发布
+    /// <summary>
+    /// 定时发布时间， Unix 时间戳（秒或毫秒），如果等于0表示未开启定时发布 
+    /// </summary>
+    public long PublishTimeStamp { get; set; }
     public string PublishLog { get; set; } // 发布日志，可以是成功日志，也可以是错误日志
 
     //public string SrtLrc { get; set; } // 字幕内容还是路径根据不同的平台要求
@@ -172,4 +176,32 @@ public class PushInfo : LiteModelBaseInt
 
         return string.Join("", parts);
     }
+}
+
+
+public class ImportModel
+{
+
+    public string Title { get; set; } // 标题 
+    public string Description { get; set; } // 内容或简介
+    public string FilePath { get; set; } // 视频路径，音频路径，图片中的图片（多个逗号分开）
+    public string ImgPath { get; set; } // 默认封面图片 
+    // 方案1：使用 List<string> 存储标签
+    public List<string> Tags { get; set; } = new List<string>();
+
+    // 可选：保留原有的 Tags 字符串属性，用于向后兼容
+    [JsonIgnore]
+    public string TagsString => Tags != null && Tags.Count > 0
+        ? "#" + string.Join("#", Tags)
+        : string.Empty;
+    
+    [JsonIgnore]
+    public long PublishTimeStamp { get; set; }
+
+    [JsonIgnore]
+    public string Sites { get; set; } // 发布站点的配置，目前主要包含分类配置
+
+    [JsonIgnore]
+    public int Original { get; set; }
+    
 }

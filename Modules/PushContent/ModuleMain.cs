@@ -72,7 +72,7 @@ namespace SmartMedia.Modules.VideoManageModule
             foreach (var item in lst)
             {
                 var statusInfo = StatusConfig.TryGetValue(item.Status, out var info) ? info : new StatusInfo(Color.White, "未知状态");
-                 
+
 
                 string resultSiteNames = string.Join(",", item.ConverSiteSettingToDict().Keys);
 
@@ -249,6 +249,12 @@ namespace SmartMedia.Modules.VideoManageModule
             dataBll.Update(model);
 
             this.BindData();
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        { 
+            var win = new EventArgsOnShowWin(new ImportDatas(dataBll), $"批量导入[{dataBll.Title}]");
+            ModuleUtils.OnEvShowToRight(win);
         }
     }
 }

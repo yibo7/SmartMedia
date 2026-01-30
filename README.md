@@ -1,116 +1,124 @@
-﻿ 
-# SmartMedia
+﻿# 新媒助手（SmartMedia）
 
-## 📌 Project Overview
+## 📌 项目概述
 
-SmartMedia is a desktop application designed to help content creators efficiently manage social media accounts across multiple platforms. Its core value lies in providing a **"One-Click Content Sync"** feature, allowing you to seamlessly distribute your created content to major platforms, significantly enhancing work efficiency.
+这是一个帮你轻松打理所有自媒体账号的工具。它的核心价值在于 **“一键多发”** ，让你写好的内容能瞬间同步到各大平台，极大提升效率。
 
-This project is committed to adhering to the developer policies and user agreements of each platform, providing users with secure and stable services.
+之所以开发它，是因为目前国内工具要么不支持海外自媒体平台，要么免费版限制太多。
 
-### Core Development Principles
-In terms of feature implementation, we strictly follow the priorities below to ensure compliance and stability:
-- **Prioritize Official APIs**: For platforms that offer open APIs (e.g., YouTube, WeChat Official Accounts), we integrate strictly through their **official APIs**, ensuring feature stability and full compliance with platform rules.
-- **Explore Compliant Solutions**: For other platforms, we only research and provide integration methods within the bounds allowed by their Terms of Service. **We explicitly oppose and prohibit any form of user operation simulation, web scraping, or other technical means that may violate platform policies.**
+国内大部分平台（如抖音、快手、小红书等）并不开放官方发布接口，通常只能通过模拟人工操作的方式来实现发布。
 
-If you learn that a platform has opened a new official API, please kindly inform us. We will promptly evaluate and work on a compliant integration.
+在实际开发中，我会优先采用更稳定的方案：
+- **如果平台提供官方 API**（如微信公众号、YouTube 等），我会直接通过 API 接入，确保发布流程稳定可靠。
+- **如果平台没有开放 API**，我会通过模拟真人操作的方式实现发布功能，并持续优化其稳定性。
 
-This is a tool I maintain personally, and I will continuously fix issues and optimize the experience. You are welcome to submit feedback on the project's Issues page.
+如果你知道有哪个平台开放了API接入，烦请您告知，我会第一时间将发布插件重构为API管理方式。
 
----
-
-## 🚀 Getting Started
-
-This software is a desktop application developed based on .NET and currently only supports the Windows operating system. It is provided as a standalone executable (.exe) file, requiring no complex installation and offering true out-of-the-box usability.
-
-**System Requirements & Notes**:
-- If prompted for a missing .NET framework upon first run, please download and install the corresponding version as guided.
-
-### 📥 Download & Installation
-1.  **Download**: Click [here](Replace with actual download link) to get the latest version compressed package.
-2.  **Extract Files**: Extract the downloaded package to your chosen directory.
-3.  **Launch Application**: Navigate to the extracted folder and double-click `SmartMedia.exe` to run.
-4.  **Install Runtime (If Required)**: If prompted for a missing .NET environment on first launch, please follow the on-screen instructions to complete the installation.
-5.  **Create Shortcut (Optional)**: Right-click `SmartMedia.exe`, select "Send to → Desktop (create shortcut)" for easier future access.
+这是我自用的工具，会一直修改已知BUG，欢迎在Issues中提出您的问题。
 
 ---
 
-## 🎨 Supported Content Types
-- Video
-- Audio
-- Image & Text Posts
-- Articles (Long-form)
+## 🚀 快速开始
 
-## ✅ Core Feature Status Overview
+本软件是一款基于 .NET 开发的桌面应用，目前仅支持 Windows 系统。它以独立的可执行文件（.exe）形式提供，无需复杂安装，真正做到开箱即用。
 
-- **One-Click Publishing**: Configure unlimited target platforms for each task and publish content to multiple platforms with one click.
-- **Batch Publishing**: Unlimited batch publishing of content to multiple platforms.
-- **Scheduled Publishing**: Specify a publication time for each task to publish content to platforms automatically.
-- **Batch Import**: Generate a data package according to the software's import specifications for one-click task import.
-- **Account Management**:
-    - [x] Unified management of accounts for multiple mainstream platforms.
-    - [x] Supports adding unlimited accounts.
+**运行条件与注意事项**：
+- 若首次运行时提示缺少 .NET 框架，请根据指引下载并安装对应版本。
+ 
 
----
-
-## 📋 Platform Support List
-
-### 1. Short Video / Video Platforms
-
-#### ✅ Already Integrated
-- Douyin
-- Kuaishou
-- Weixin Channels (WeChat Video)
-- Bilibili
-- Xiaohongshu (Red, Video Notes)
-- YouTube **（Integrated via Official API）**
-
-#### 🔄 Planned Integration / Optimization
-- Instagram Reels
-- Facebook Reels
-- TikTok **（Planned integration via official API）**
-
----
-
-### 2. Image & Text / Article Platforms
-
-#### ✅ Already Integrated
-- WeChat Official Accounts **（Integrated via Official API）**
-
-#### 🔄 Planned Integration / Optimization
-- Jinri Toutiao (Today's Headlines)
-- Sina Weibo
-- Zhihu
-- Xiaohongshu (Red, Image & Text Notes)
-
----
-
-### 3. Audio / Audiobook Platforms
-
-#### ✅ Already Integrated
-- Ximalaya (Himalaya)
-
-#### 🔄 Planned Integration / Optimization
-- Lanren Tingshu
-- Qingting FM
-
----
-
-## ❓ FAQ & Support
-
-- **Technical Issues**: Please first submit them on the project's [GitHub Issues](Replace with actual GitHub Issues link) page. We will respond as soon as possible.
-- **Feedback**: Suggestions for new features or improvements are welcome.
-- **Other Inquiries**: For other assistance, please contact us via the GitHub project homepage.
-
----
-
-## 🤝 Contribution & Support
-
-We welcome and appreciate all forms of contribution, including but not limited to:
-- Submitting code improvements or new features
-- Reporting bugs or making suggestions
-- Improving documentation
-- Sharing usage experiences
-
-Thank you for your interest and support in SmartMedia!
+### 📥 下载与安装
+1.  **下载软件**：点击[此处](请替换为实际的下载链接)获取最新版本压缩包。
+2.  **解压文件**：将下载的压缩包解压至你选择的目录。
+3.  **启动程序**：进入解压后的文件夹，双击运行 `SmartMedia.exe`。
+4.  **安装运行环境**（如需要）：若首次运行提示缺少 .NET 环境，请按界面指引完成安装。
+5.  **创建快捷方式**（可选）：右键点击 `SmartMedia.exe`，选择“发送到 → 桌面快捷方式”，方便日后快速启动。
 
  
+---
+
+## 🎨 支持内容类型
+- 视频
+- 音频
+- 图文
+- 文章(长文章)
+
+## ✅ 核心功能状态概览
+
+- **一键发布**：每条任务可以配置无限个发布平台，一键发布内容至多个平台。
+- **批量发布**：无限批量发布内容至多个平台。
+- **定时发布**：每一条任务都可以指定发布时间，定时发布内容至多个平台。
+- **批量导入**：按软件导入规范生成数据包后，可一键导入任务。
+- **账号管理**：
+  - [x] 统一管理多个主流平台账号
+  - [x] 支持无限添加账号
+
+---
+
+## 📋 平台支持清单
+
+### 一、短视频/视频平台
+
+#### ✅ 已完成接入
+- 抖音
+- 快手
+- 微信视频号
+- Bilibili (B站)
+- 小红书 (视频笔记)
+- YouTube **（基于官方API，管理更稳定）**
+
+#### 🔄 待接入/优化
+- Instagram Reels
+- Facebook Reels
+- TikTok (国际版)
+
+---
+
+### 二、图文/文章平台
+
+#### ✅ 已完成接入
+- 微信公众号 **（基于官方API，管理更稳定）**
+
+#### 🔄 待接入/优化
+- 今日头条
+- 新浪微博
+- 知乎
+- 小红书 (图文笔记)
+
+---
+
+### 三、音频/听书平台
+
+#### ✅ 已完成接入
+- 喜马拉雅
+
+#### 🔄 待接入/优化
+- 懒人听书
+- 蜻蜓FM
+
+---
+
+## 🖼️ 产品截图展示
+
+![新媒助手](doc/images/1.png "产品截图")
+
+
+
+---
+
+## ❓ 常见问题与支持
+
+- **技术问题**：请优先在项目的 [GitHub Issues](请替换为实际的GitHub Issues链接) 页面提交，我们将尽快回复。
+- **使用反馈**：欢迎提出功能建议或改进想法。
+- **其他咨询**：如需其他帮助，可通过GitHub项目主页联系我们。
+
+---
+
+## 🤝 贡献与支持
+
+我们欢迎并感谢所有形式的贡献，包括但不限于：
+- 提交代码改进或新功能
+- 报告Bug或提出建议
+- 完善使用文档
+- 分享使用经验
+
+感谢您对新媒助手（SmartMedia）的关注与支持！

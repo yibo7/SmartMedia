@@ -1,10 +1,12 @@
-﻿using SmartMedia.MCore;
+﻿using SmartMedia.Controls;
+using SmartMedia.MCore;
 using SmartMedia.Plugins;
 using SmartMedia.Plugins.AutoPush;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using XS.Core2.XsExtensions;
+using ZstdSharp.Unsafe;
 
 namespace SmartMedia.Modules.PushContent.DB
 {
@@ -18,6 +20,37 @@ namespace SmartMedia.Modules.PushContent.DB
         abstract public void OnOpenAdd(long Id);
         //abstract  protected Task PushOneTask(long Id, Action<string,int,int> CallBack);
         abstract public Task StartPush(long Id, Action<string, int, int> CallBack);
+
+        virtual public string ImportData(List<ImportModel> importModels) {
+
+            var sbErr = new StringBuilder();
+            foreach (var item in importModels) {
+                var model = new PushInfo();
+
+                model.Title = item.Title.Trim();
+                model.Tags = item.TagsString;
+                //model.Status = 0;
+                model.Original = item.Original;
+                model.Info = string.IsNullOrWhiteSpace(item.Description)?"": item.Description;
+
+                model.FilePath = item.FilePath;
+                model.ImgPath = item.ImgPath;
+                 
+
+                model.Sites = item.Sites;
+
+                model.PublishTimeStamp = item.PublishTimeStamp;
+                 
+                var rz = this.AddData(model);
+                if (!string.IsNullOrEmpty(rz.Item1))
+                {
+                    sbErr.AppendLine($"添加【{model.Title}】发生错误：{rz.Item1}");
+                }
+            }
+            return sbErr.ToString();
+        }
+
+        abstract public SiteSelector NewSiteSelector();
         public List<PushInfo> Search(int status = -1, string keyword = "")
         {
             int limit = 1000;
@@ -184,7 +217,7 @@ namespace SmartMedia.Modules.PushContent.DB
 
             model.IType = this.IType;
 
-            model.Tags = model.Tags.Replace("，", ",");
+            model.Tags = model.Tags.Replace("＃", "#"); 
 
             model.CreateTime = DateTime.Now;
             model.CreateTimeInt = XS.Core2.SqlDateTimeInt.GetMilliSecond();

@@ -1,5 +1,6 @@
 ﻿
 
+using SmartMedia.Controls;
 using SmartMedia.MCore;
 using SmartMedia.Modules.VideoManageModule;
 using SmartMedia.Plugins.AutoPush.Article;
@@ -37,6 +38,12 @@ internal class VideoBll : PushContentBllBase
         await base.PushTask<VideoPushBase>(Id, CallBack);
     }
 
+    override public SiteSelector NewSiteSelector()
+    {
+        return new SiteSelector();
+    }
+
+   
 
 }
 
@@ -59,6 +66,13 @@ internal class AudioBll : PushContentBllBase
 
         return base.PushTask<AudioPushBase>(Id, CallBack);
     }
+
+    override public SiteSelector NewSiteSelector()
+    {
+        return new SiteSelectorAudio();
+    }
+
+ 
 }
 internal class ArticleBll : PushContentBllBase
 {
@@ -75,7 +89,11 @@ internal class ArticleBll : PushContentBllBase
     {
         return base.PushTask<ArticlePushBase>(Id, CallBack);
     }
-
+    override public SiteSelector NewSiteSelector()
+    {
+        return new SiteSelectorArticle();
+    }
+   
 
 }
 
@@ -94,6 +112,10 @@ internal class ImagePostBll : PushContentBllBase
     {
         return base.PushTask<ImagePushBase>(Id, CallBack);
     }
-
+    override public SiteSelector NewSiteSelector()
+    {
+        return new SiteSelectorImgPost();
+    }
+ 
 
 }

@@ -21,8 +21,9 @@ namespace SmartMedia.Modules.VideoManageModule
             components = new System.ComponentModel.Container();
             删除ToolStripMenuItem = new ToolStripMenuItem();
             menuContext = new ContextMenuStrip(components);
-            重置为未发布ToolStripMenuItem = new ToolStripMenuItem();
             发布ToolStripMenuItem = new ToolStripMenuItem();
+            设为已发布ToolStripMenuItem = new ToolStripMenuItem();
+            重置为未发布ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new XsToolBar();
             btnDelSels = new ToolStripButton();
             toolStripLabel1 = new ToolStripLabel();
@@ -47,7 +48,7 @@ namespace SmartMedia.Modules.VideoManageModule
             toolStrip2 = new XsToolBar();
             btnJobImg = new ToolStripButton();
             lbContentName = new ToolStripLabel();
-            设为已发布ToolStripMenuItem = new ToolStripMenuItem();
+            btnImport = new ToolStripButton();
             menuContext.SuspendLayout();
             toolStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
@@ -72,7 +73,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // 删除ToolStripMenuItem
             // 
             删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            删除ToolStripMenuItem.Size = new Size(180, 22);
+            删除ToolStripMenuItem.Size = new Size(136, 22);
             删除ToolStripMenuItem.Text = "删除";
             删除ToolStripMenuItem.Click += 删除ToolStripMenuItem_Click;
             // 
@@ -80,26 +81,33 @@ namespace SmartMedia.Modules.VideoManageModule
             // 
             menuContext.Items.AddRange(new ToolStripItem[] { 发布ToolStripMenuItem, 删除ToolStripMenuItem, 设为已发布ToolStripMenuItem, 重置为未发布ToolStripMenuItem });
             menuContext.Name = "menuContext";
-            menuContext.Size = new Size(181, 114);
-            // 
-            // 重置为未发布ToolStripMenuItem
-            // 
-            重置为未发布ToolStripMenuItem.Name = "重置为未发布ToolStripMenuItem";
-            重置为未发布ToolStripMenuItem.Size = new Size(180, 22);
-            重置为未发布ToolStripMenuItem.Text = "设为未发布";
-            重置为未发布ToolStripMenuItem.Click += 重置为未发布ToolStripMenuItem_Click;
+            menuContext.Size = new Size(137, 92);
             // 
             // 发布ToolStripMenuItem
             // 
             发布ToolStripMenuItem.Name = "发布ToolStripMenuItem";
-            发布ToolStripMenuItem.Size = new Size(180, 22);
+            发布ToolStripMenuItem.Size = new Size(136, 22);
             发布ToolStripMenuItem.Text = "发布";
             发布ToolStripMenuItem.Click += 发布ToolStripMenuItem_Click;
+            // 
+            // 设为已发布ToolStripMenuItem
+            // 
+            设为已发布ToolStripMenuItem.Name = "设为已发布ToolStripMenuItem";
+            设为已发布ToolStripMenuItem.Size = new Size(136, 22);
+            设为已发布ToolStripMenuItem.Text = "设为已发布";
+            设为已发布ToolStripMenuItem.Click += 设为已发布ToolStripMenuItem_Click;
+            // 
+            // 重置为未发布ToolStripMenuItem
+            // 
+            重置为未发布ToolStripMenuItem.Name = "重置为未发布ToolStripMenuItem";
+            重置为未发布ToolStripMenuItem.Size = new Size(136, 22);
+            重置为未发布ToolStripMenuItem.Text = "设为未发布";
+            重置为未发布ToolStripMenuItem.Click += 重置为未发布ToolStripMenuItem_Click;
             // 
             // toolStrip1
             // 
             toolStrip1.GripMargin = new Padding(3);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { btnDelSels, toolStripLabel1, txtSearchKey, cbStatus, btnSearch });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { btnImport, btnDelSels, toolStripLabel1, txtSearchKey, cbStatus, btnSearch });
             toolStrip1.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
@@ -368,12 +376,16 @@ namespace SmartMedia.Modules.VideoManageModule
             lbContentName.Size = new Size(56, 22);
             lbContentName.Text = "内容详情";
             // 
-            // 设为已发布ToolStripMenuItem
+            // btnImport
             // 
-            设为已发布ToolStripMenuItem.Name = "设为已发布ToolStripMenuItem";
-            设为已发布ToolStripMenuItem.Size = new Size(180, 22);
-            设为已发布ToolStripMenuItem.Text = "设为已发布";
-            设为已发布ToolStripMenuItem.Click += 设为已发布ToolStripMenuItem_Click;
+            btnImport.Alignment = ToolStripItemAlignment.Right;
+            btnImport.Image = Resource.putin;
+            btnImport.ImageScaling = ToolStripItemImageScaling.None;
+            btnImport.ImageTransparentColor = Color.Magenta;
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(92, 36);
+            btnImport.Text = "批量导入";
+            btnImport.Click += btnImport_Click;
             // 
             // ModuleMain
             // 
@@ -445,5 +457,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private Panel panel1;
         private Label label1;
         private ToolStripMenuItem 设为已发布ToolStripMenuItem;
+        private ToolStripButton btnImport;
     }
 }
