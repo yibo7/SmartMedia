@@ -38,10 +38,10 @@ namespace SmartMedia.Modules.Job
             lvData = new XsListViewBox();
             ucSplitLine_h1 = new XS.WinFormsTools.Forms.UCSplitLine_H();
             splitContainer1 = new SplitContainer();
-            label1 = new Label();
-            lbTags = new Label();
-            txtDes = new RichTextBox();
+            splitContainer2 = new SplitContainer();
+            lbTitle = new Label();
             picCover = new XS.WinFormsTools.Controls.PictureBox();
+            txtDes = new XS.WinFormsTools.XsRichTextBox();
             toolStrip2 = new XsToolBar();
             btnJobImg = new ToolStripButton();
             lbJobName = new ToolStripLabel();
@@ -51,6 +51,10 @@ namespace SmartMedia.Modules.Job
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picCover).BeginInit();
             toolStrip2.SuspendLayout();
             SuspendLayout();
@@ -126,54 +130,74 @@ namespace SmartMedia.Modules.Job
             // 
             // splitContainer1.Panel2
             // 
-            splitContainer1.Panel2.Controls.Add(label1);
-            splitContainer1.Panel2.Controls.Add(lbTags);
-            splitContainer1.Panel2.Controls.Add(txtDes);
-            splitContainer1.Panel2.Controls.Add(picCover);
+            splitContainer1.Panel2.Controls.Add(splitContainer2);
             splitContainer1.Panel2.Controls.Add(toolStrip2);
             splitContainer1.Size = new Size(1062, 452);
             splitContainer1.SplitterDistance = 827;
             splitContainer1.TabIndex = 4;
             // 
-            // label1
+            // splitContainer2
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(17, 207);
-            label1.Name = "label1";
-            label1.Size = new Size(32, 17);
-            label1.TabIndex = 69;
-            label1.Text = "简介";
+            splitContainer2.BackColor = Color.WhiteSmoke;
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.FixedPanel = FixedPanel.Panel1;
+            splitContainer2.Location = new Point(0, 25);
+            splitContainer2.Name = "splitContainer2";
+            splitContainer2.Orientation = Orientation.Horizontal;
             // 
-            // lbTags
+            // splitContainer2.Panel1
             // 
-            lbTags.AutoSize = true;
-            lbTags.Location = new Point(17, 169);
-            lbTags.Name = "lbTags";
-            lbTags.Size = new Size(44, 17);
-            lbTags.TabIndex = 68;
-            lbTags.Text = "标签：";
+            splitContainer2.Panel1.Controls.Add(lbTitle);
+            splitContainer2.Panel1.Controls.Add(picCover);
             // 
-            // txtDes
+            // splitContainer2.Panel2
             // 
-            txtDes.BorderStyle = BorderStyle.None;
-            txtDes.Location = new Point(17, 240);
-            txtDes.Name = "txtDes";
-            txtDes.Size = new Size(202, 89);
-            txtDes.TabIndex = 67;
-            txtDes.Text = "";
+            splitContainer2.Panel2.Controls.Add(txtDes);
+            splitContainer2.Panel2.Padding = new Padding(5);
+            splitContainer2.Size = new Size(231, 427);
+            splitContainer2.SplitterDistance = 163;
+            splitContainer2.TabIndex = 71;
+            // 
+            // lbTitle
+            // 
+            lbTitle.AutoSize = true;
+            lbTitle.Location = new Point(15, 135);
+            lbTitle.Name = "lbTitle";
+            lbTitle.Size = new Size(32, 17);
+            lbTitle.TabIndex = 69;
+            lbTitle.Text = "标题";
             // 
             // picCover
             // 
-            picCover.BackColor = Color.WhiteSmoke;
             picCover.ErrorColor = Color.FromArgb(255, 240, 240);
             picCover.LoadedColor = Color.FromArgb(245, 245, 245);
             picCover.LoadingColor = Color.FromArgb(240, 240, 240);
-            picCover.Location = new Point(26, 45);
+            picCover.Location = new Point(15, 14);
             picCover.Name = "picCover";
             picCover.ShowLoadingIndicator = true;
-            picCover.Size = new Size(155, 100);
-            picCover.TabIndex = 66;
+            picCover.Size = new Size(173, 108);
+            picCover.TabIndex = 68;
             picCover.TabStop = false;
+            // 
+            // txtDes
+            // 
+            txtDes.BackColor = SystemColors.Window;
+            txtDes.BorderColor = Color.Gainsboro;
+            txtDes.BorderFocusColor = Color.DodgerBlue;
+            txtDes.BorderSize = 2;
+            txtDes.ConerRadius = 2;
+            txtDes.Dock = DockStyle.Fill;
+            txtDes.Font = new Font("Microsoft Sans Serif", 9.5F);
+            txtDes.ForeColor = Color.DimGray;
+            txtDes.Location = new Point(5, 5);
+            txtDes.Margin = new Padding(4);
+            txtDes.Name = "txtDes";
+            txtDes.Padding = new Padding(7);
+            txtDes.ReadOnly = true;
+            txtDes.Size = new Size(221, 250);
+            txtDes.TabIndex = 1;
+            txtDes.Texts = "";
+            txtDes.UnderlinedStyle = false;
             // 
             // toolStrip2
             // 
@@ -200,7 +224,7 @@ namespace SmartMedia.Modules.Job
             lbJobName.BackColor = Color.White;
             lbJobName.Name = "lbJobName";
             lbJobName.Size = new Size(56, 22);
-            lbJobName.Text = "任务名称";
+            lbJobName.Text = "任务详情";
             // 
             // JobList
             // 
@@ -219,6 +243,11 @@ namespace SmartMedia.Modules.Job
             splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel1.PerformLayout();
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
+            splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picCover).EndInit();
             toolStrip2.ResumeLayout(false);
             toolStrip2.PerformLayout();
@@ -232,14 +261,14 @@ namespace SmartMedia.Modules.Job
         private XsListViewBox lvData;
         private ToolStripButton btnPassAll;
         private SplitContainer splitContainer1;
-        private XsToolBar toolStrip2;
-        private ToolStripLabel lbJobName;
-        private ToolStripButton btnJobImg;
         private XS.WinFormsTools.Forms.UCSplitLine_H ucSplitLine_h1;
         private ToolStripButton btnRefesh;
+        private SplitContainer splitContainer2;
+        private Label lbTitle;
         private XS.WinFormsTools.Controls.PictureBox picCover;
-        private RichTextBox txtDes;
-        private Label lbTags;
-        private Label label1;
+        private XsToolBar toolStrip2;
+        private ToolStripButton btnJobImg;
+        private ToolStripLabel lbJobName;
+        private XS.WinFormsTools.XsRichTextBox txtDes;
     }
 }

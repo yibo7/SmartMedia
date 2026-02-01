@@ -31,30 +31,11 @@ namespace SmartMedia.Modules.Job
 
             BindData();
         }
-
-        //private Bitmap GetIco(string ico_key)
-        //{
-        //    var iconFrom = Resource.ResourceManager.GetObject(ico_key);
-        //    Bitmap ico = null;
-        //    if (iconFrom != null)
-        //    {
-        //        ico = iconFrom as Bitmap;
-        //    }
-        //    else
-        //    {
-        //        ico = Resource.inindex;
-        //    }
-        //    return ico;
-        //}
+         
         private void AddItem(PushInfo model, int iIndex)
         {
             lvData.AddItem(model.Id.ToString(), $"{iIndex}、{model.Title}", model.ContentTypeName, model.PublishDateTime, model.FormatTimeRemaining());
-
-            //lvData.AddItem(model.IcoName, model.Id, $"{iIndex}、{model.JobName}"
-            //        , model.Enable ? "运行中" : "暂停"
-            //        , model.RunCount.ToString()
-            //        , model.LastRezult
-            //        );
+             
         }
         /// <summary>
         /// 
@@ -107,14 +88,13 @@ namespace SmartMedia.Modules.Job
                 // 执行你需要的操作，例如获取选中项的文本
                 string jobId = GetSelJobJd;
                 var model = new VideoBll().GetEntity(jobId.ToLong());
-                lbJobName.Text = model.Title;
+                lbTitle.Text = $"标题: {model.Title}"; 
                 if (!string.IsNullOrWhiteSpace(model.ImgPath) && File.Exists(model.ImgPath))
                 {
                     picCover.LoadImageFromFilePath(model.ImgPath);
                 }
 
-                lbTags.Text = string.IsNullOrWhiteSpace(model.Tags) ? "标签：暂无" : $"标签：{model.Tags}";
-                txtDes.Text = string.IsNullOrWhiteSpace(model.Info) ? "暂无" : model.Info;
+                txtDes.Text = $"{model.Tags}\n\n{model.Info}";
             }
         }
 

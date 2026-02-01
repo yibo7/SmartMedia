@@ -18,20 +18,20 @@ namespace SmartMedia.Modules.VideoManageModule
         {
             InitializeComponent();
             this.Resize += new EventHandler(Form_Resize);
-             
+
 
             if (_model != null)
             {
                 txtTitle.Text = _model.Title;
 
                 txtTags.Text = _model.Tags;
-                txtInfo.Text = _model.Info; 
+                txtInfo.Text = _model.Info;
 
                 if (!string.IsNullOrWhiteSpace(_model.FilePath))
                 {
                     imageList.ImgPathValues = _model.FilePath.SplitByWrap();
                 }
-                
+
                 cbIsRc.Checked = _model.Original == 1;
 
                 publishTimer.DateTimestamp = _model.PublishTimeStamp;
@@ -52,8 +52,8 @@ namespace SmartMedia.Modules.VideoManageModule
             panelCenter.Top = (panel1.Height - panelCenter.Height) / 2; // 可选：同时居中垂直位置
         }
 
-          
-         
+
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             (bool IsOk, _Id) = SaveData();
@@ -69,7 +69,7 @@ namespace SmartMedia.Modules.VideoManageModule
 
         private (bool, long) SaveData()
         {
-             
+
             (string err, Dictionary<string, Dictionary<string, string>>? dicSites) = siteSelector.GetValueSettings();
 
             if (!string.IsNullOrWhiteSpace(err))
@@ -87,11 +87,11 @@ namespace SmartMedia.Modules.VideoManageModule
             model.Info = txtInfo.Texts.Trim();
 
             var imgPaths = imageList.ImgPathValues;
-            if(!Equals(imgPaths, null) && imgPaths.Length > 0)
+            if (!Equals(imgPaths, null) && imgPaths.Length > 0)
             {
                 model.FilePath = Equals(imgPaths, null) ? "" : string.Join("\n", imgPaths);
                 model.ImgPath = imgPaths[0];
-            } 
+            }
 
             model.Sites = dicSites.ToJsonString();
 
@@ -110,14 +110,14 @@ namespace SmartMedia.Modules.VideoManageModule
                 return (true, Id);
             }
         }
-         
+
         private async void btnPush_Click(object sender, EventArgs e)
         {
             //(bool IsOk, long Id) = SaveData();
             if (_Id > 0)
             {
                 btnPush.Enabled = false;
-                var frmLoading = new FrmLoading(); 
+                var frmLoading = new FrmLoading();
                 await frmLoading.ShowWinAsync(async () =>
                 {
                     frmLoading.ToDo(100, 0, "正在加载上传插件...");
@@ -137,10 +137,11 @@ namespace SmartMedia.Modules.VideoManageModule
                 });
 
                 btnPush.Enabled = true;
-            } 
+            }
 
 
         }
-          
+
+         
     }
 }

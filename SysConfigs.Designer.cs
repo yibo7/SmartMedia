@@ -39,9 +39,9 @@
             cbIsOpenBrowser.Font = new Font("Segoe UI", 12F);
             cbIsOpenBrowser.Location = new Point(29, 37);
             cbIsOpenBrowser.Name = "cbIsOpenBrowser";
-            cbIsOpenBrowser.Size = new Size(237, 20);
+            cbIsOpenBrowser.Size = new Size(185, 20);
             cbIsOpenBrowser.TabIndex = 0;
-            cbIsOpenBrowser.Text = "模拟人工发布否打开浏览器";
+            cbIsOpenBrowser.Text = "发布是否打开浏览器";
             cbIsOpenBrowser.UseVisualStyleBackColor = true;
             // 
             // cbIsCopyFiles
@@ -50,9 +50,9 @@
             cbIsCopyFiles.Font = new Font("Segoe UI", 12F);
             cbIsCopyFiles.Location = new Point(29, 78);
             cbIsCopyFiles.Name = "cbIsCopyFiles";
-            cbIsCopyFiles.Size = new Size(254, 20);
+            cbIsCopyFiles.Size = new Size(185, 20);
             cbIsCopyFiles.TabIndex = 1;
-            cbIsCopyFiles.Text = "添加任务是否复制文件到本地";
+            cbIsCopyFiles.Text = "是否复制文件到本地";
             cbIsCopyFiles.UseVisualStyleBackColor = true;
             // 
             // btnSaveConfigs

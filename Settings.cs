@@ -49,6 +49,9 @@ namespace SmartMedia
         public int IsOpenBrowser = 0;
 
         public int IsCopyFiles = 0;
-         
+
+        public string CopyFolder = "CopyFiles";
+
+
     }
 }
