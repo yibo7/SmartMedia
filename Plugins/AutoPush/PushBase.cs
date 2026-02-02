@@ -1,12 +1,9 @@
-﻿using Microsoft.Playwright;
-using Microsoft.VisualBasic;
-using MySqlX.XDevAPI.Common;
+﻿using Microsoft.Playwright; 
 using SmartMedia.AtqCore;
 using SmartMedia.Controls;
 using SmartMedia.Modules.PushContent;
 using SmartMedia.Modules.PushContent.DB;
-using XS.Core2;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using XS.Core2; 
 
 namespace SmartMedia.Plugins.AutoPush;
 
@@ -53,7 +50,7 @@ abstract public class PushBase : PluginBase
     virtual public string CategoryFileName => "";
     virtual public List<string> GetCategoryList()
     {
-        string sClassNames = GetCtrValue("发布分类");
+        string sClassNames = GetCtrValue("ClassName");
         if (!string.IsNullOrEmpty(sClassNames))
         {
             return sClassNames.Split(',').ToList();
@@ -219,7 +216,9 @@ abstract public class PushBase : PluginBase
             if (Equals(model, null))
                 return "信息实体不能为空";
 
-            await using var context = await PlaywrightUtils.CreatePlaywrightAsync(StatePath, false);
+            bool IsOpenBorwn = Settings.Instance.IsOpenBrowser == 1;
+
+            await using var context = await PlaywrightUtils.CreatePlaywrightAsync(StatePath, !IsOpenBorwn);
 
             var page = await context.NewPageAsync();
             page.SetDefaultTimeout(0); // 永远不超时,一些大文件上传会超时
@@ -311,6 +310,15 @@ abstract public class PushBase : PluginBase
 
         return "";
 
+    }
+    /// <summary>
+    /// 滚动到页面底部
+    /// </summary>
+    /// <param name="page"></param>
+    protected async Task ScrollToBottom(IPage page)
+    {
+        await page.EvaluateAsync("() => window.scrollTo(0, document.body.scrollHeight);");
+        await page.WaitForTimeoutAsync(2000);
     }
 
 

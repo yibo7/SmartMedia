@@ -22,13 +22,15 @@ namespace SmartMedia.Plugins.AutoPush.Video
         }
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {
-
+            CallBack("视频上传中...");
             // 选择视频文件
             await page.SetInputFilesAsync("input[type=file]", model.FilePath);
 
             await page.WaitForSelectorAsync("text='替换视频'");
 
             #region 更改封面
+            
+            CallBack("正在更改封面...");
 
             string coverPath = base.GetCoverPath();
             coverPath = string.IsNullOrWhiteSpace(coverPath) ? model.ImgPath : coverPath;
@@ -64,7 +66,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 PrintLog($"封面图片不存在或地址为空：{coverPath}");
             }
             #endregion
-
+            CallBack("正在输入标题...");
             if (!string.IsNullOrEmpty(model.Title))
             {
                 //await page.GetByPlaceholder("填写标题，可能会有更多赞哦～").FillAsync(model.Title.CutStrLen(20));
@@ -78,7 +80,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
 
 
 
-            
+            CallBack("正在输入内容...");
             await page.WaitForTimeoutAsync(1000);
             // 输入内容
              
@@ -93,6 +95,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
             #endregion
 
+            CallBack("正在设置专题...");
             string specialName = GetSpecialName();
 
             if (!string.IsNullOrWhiteSpace(specialName))
@@ -102,11 +105,15 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 await page.GetByText(specialName, new() { Exact = true }).ClickAsync();
 
             }
+
+            CallBack("声明...");
             await page.GetByText("去声明").ClickAsync();
             await page.WaitForTimeoutAsync(1000);
             await page.Locator(".d-checkbox-indicator").ClickAsync();
             await page.WaitForTimeoutAsync(1000);
             await page.GetByRole(AriaRole.Button, new() { Name = "声明原创" }).ClickAsync();
+
+            CallBack("即将发布...");
             await page.WaitForTimeoutAsync(1000);
             await page.GetByRole(AriaRole.Button, new() { Name = "发布" }).ClickAsync();
             await page.WaitForTimeoutAsync(5000);

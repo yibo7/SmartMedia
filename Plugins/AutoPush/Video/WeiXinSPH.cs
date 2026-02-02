@@ -21,9 +21,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             return await LoginCustom("https://channels.weixin.qq.com", "button:has-text('发表视频')");
         }
 
-        //override protected Dictionary<string, SettingItem> SiteCtrls => new Dictionary<string, SettingItem>() {
-        //    { "合集名称",new SettingItem(CtrlType.TextBox,"可为空，你在此平台上创建的合集名称")}
-        //};
+   
         override protected Dictionary<string, SettingCtrBase> SiteCtrls
         {
             get
@@ -41,7 +39,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {
 
-
+            CallBack("正在上传视频...");
             // 选择视频文件
             await page.SetInputFilesAsync("input[type=file]", model.FilePath);
 
@@ -51,6 +49,8 @@ namespace SmartMedia.Plugins.AutoPush.Video
             {
                 State = WaitForSelectorState.Visible
             });
+
+            CallBack("正在更改封面...");
             await page.WaitForTimeoutAsync(3000);
             #region 更改封面
 
@@ -78,6 +78,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
             #endregion
 
+            CallBack("正在设置标签...");
             // 输入内容
             var contentInput = await page.QuerySelectorAsync(".input-editor");
             await contentInput.ClickAsync();
@@ -97,6 +98,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
             #endregion 
 
+            CallBack("正在设置简介...");
             #region 视频简介
             if (!string.IsNullOrWhiteSpace(model.Info))
             {
@@ -106,6 +108,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
             #endregion
 
+            CallBack("正在选择专集...");
             // 专题
             var special = GetSpecialName();
             if (!string.IsNullOrWhiteSpace(special))
@@ -121,13 +124,14 @@ namespace SmartMedia.Plugins.AutoPush.Video
                     await page.WaitForTimeoutAsync(1000);
                 }
             }
+            CallBack("正在设置标题...");
             // 短标题
             if (!string.IsNullOrWhiteSpace(model.Title))
             {
                 await page.GetByPlaceholder("概括视频主要内容，字数建议6-16个字符").FillAsync(model.Title.CutStrLen(15));
                 await page.WaitForTimeoutAsync(1000);
             }
-
+            CallBack("即将发布...");
             await page.GetByRole(AriaRole.Button, new() { Name = "发表", Exact = true }).ClickAsync();
             await page.WaitForTimeoutAsync(1000);
 

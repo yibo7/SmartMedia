@@ -17,13 +17,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
 
         public override string PluginName => "抖音";
         override public Image IcoName => Resource.douyin;
-
-        //override protected Dictionary<string, SettingItem> SiteCtrls => new Dictionary<string, SettingItem>() {
-        //    { "是否同步",new SettingItem(CtrlType.CheckBox,"是否同步到到西瓜与头条",value:"True")},
-        //    { "合集名称",new SettingItem(CtrlType.TextBox,"可为空，你在此平台上创建的合集名称",value:"")}
-        //};
-
-
+         
         override protected Dictionary<string, SettingCtrBase> SiteCtrls => new Dictionary<string, SettingCtrBase>() {
             { "是否同步",base.BuildCtr<SettingCheckBox>("是否同步","是否同步到到西瓜与头条","True")},
             { "SpecialName",BuildCtr<SettingTextBox>("合集名称","可为空，你在此平台上创建的合集名称") },
@@ -38,12 +32,13 @@ namespace SmartMedia.Plugins.AutoPush.Video
 
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {
-            PrintLog($"开始处理【{this.PluginName}】");
+            CallBack($"开始处理【{this.PluginName}】");
             var err = base.CheckModel(model);
 
             if (!string.IsNullOrWhiteSpace(err))
                 return err;
 
+            CallBack("正在上传视频...");
 
             // 点击发布视频按钮
             //await page.ClickAsync("span:text('上传视频')");
@@ -58,17 +53,20 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 State = WaitForSelectorState.Detached // 等待元素从 DOM 中移除
             });
 
+            CallBack("正在输入标题...");
             // 输入标题
             await page.ClickAsync("input[placeholder='填写作品标题，为作品获得更多流量']");
             await page.WaitForTimeoutAsync(1000);
             await page.FillAsync("input[placeholder='填写作品标题，为作品获得更多流量']", model.Title.CutStrLen(60));
             await page.WaitForTimeoutAsync(1000);
+
+            CallBack("正在输入简介...");
             // 输入内容
             var contentInput = await page.QuerySelectorAsync("div[data-placeholder='添加作品简介']");
             await contentInput.ClickAsync();
             await page.WaitForTimeoutAsync(1000);
 
-
+            CallBack("正在输入标签...");
             #region 添加标签
             var TagList = model.TagList();
             if (TagList.Count > 0)
@@ -84,7 +82,8 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 await page.WaitForTimeoutAsync(1000);
             }
             #endregion
-            PrintLog("开始填写内容");
+
+            CallBack("开始填写内容");
 
             #region 视频简介
             string sDescription = model.Info;
@@ -96,7 +95,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
             #endregion
 
-
+            CallBack("正在更改封面...");
 
             #region 更改封面
 
@@ -145,7 +144,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 await page.WaitForTimeoutAsync(1000);
             }
 
-
+            CallBack("正在选择集合...");
             var special = GetSpecialName();
             if (!string.IsNullOrWhiteSpace(special))
             {

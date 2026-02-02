@@ -31,18 +31,12 @@ namespace SmartMedia.Plugins.AutoPush.Audio
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {
 
-            PrintLog($"开始处理【{this.PluginName}】");
+            CallBack($"开始处理【{this.PluginName}】");
             var err = base.CheckModel(model);
 
             if (!string.IsNullOrWhiteSpace(err))
                 return err;
-            // 等待 iframe 加载
-            //await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            //// 选择视频文件
-            ////await page.SetInputFilesAsync("input[type=file]", model.FilePath);
-            //await page.Locator("#contentWrapper").ContentFrame.GetByRole(AriaRole.Button, new() { Name = "上传音频" }).ClickAsync();
-            //await page.Locator("#contentWrapper").ContentFrame.GetByRole(AriaRole.Button, new() { Name = "上传音频" }).SetInputFilesAsync(model.FilePath);
-
+            
             // 确保在正确的 iframe 中
             var frame = page.Locator("#contentWrapper").ContentFrame;
 
@@ -67,12 +61,10 @@ namespace SmartMedia.Plugins.AutoPush.Audio
                     .First
                     .SetInputFilesAsync(model.FilePath);
             }
+            CallBack("音频上传完毕，开始设置专题!");
+            
 
-            // 等待上传
-            //await page.WaitForSelectorAsync(":has-text('上传成功')");
-
-
-            await page.WaitForTimeoutAsync(20000);
+            await page.WaitForTimeoutAsync(2000);
             var special = GetSpecialName();
             if (!string.IsNullOrWhiteSpace(special))
             {
@@ -81,7 +73,7 @@ namespace SmartMedia.Plugins.AutoPush.Audio
                 await page.Locator("#contentWrapper").ContentFrame.GetByRole(AriaRole.Button, new() { Name = special }).ClickAsync();
                 await page.WaitForTimeoutAsync(2000);
             }
-            
+            CallBack("开始设置标题!");
             await page.Locator("#contentWrapper").ContentFrame.GetByRole(AriaRole.Textbox, new() { Name = "请输入声音标题" }).ClickAsync();
             await page.WaitForTimeoutAsync(2000);
             await page.Locator("#contentWrapper").ContentFrame.GetByRole(AriaRole.Textbox, new() { Name = "请输入声音标题" }).FillAsync(model.Title);
@@ -93,7 +85,7 @@ namespace SmartMedia.Plugins.AutoPush.Audio
             await page.Locator("#contentWrapper").ContentFrame.Locator("iframe").First.ContentFrame.Locator("body").ClickAsync();
             await page.WaitForTimeoutAsync(2000);
             await page.Locator("#contentWrapper").ContentFrame.Locator("iframe").First.ContentFrame.Locator("body").FillAsync(model.Info);
-
+            CallBack("开始添加标签!");
 
             #region 添加标签
             var TagList = model.TagList();
@@ -111,8 +103,8 @@ namespace SmartMedia.Plugins.AutoPush.Audio
                 }  
             }
             #endregion
-             
-            
+
+            CallBack("设置字幕!");
             string lrcContent = GetLrcContent();
             if (!string.IsNullOrWhiteSpace(lrcContent))
             {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using SmartMedia.AtqCore;
 using SmartMedia.Modules.PushContent.DB;
 
 namespace SmartMedia.Plugins.AutoPush.Video
@@ -21,56 +22,66 @@ namespace SmartMedia.Plugins.AutoPush.Video
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {
 
-
+            CallBack("准备上传视频");
             // 选择文件上传 
             await page.SetInputFilesAsync("input[type=file]", model.FilePath);
             await page.WaitForTimeoutAsync(1000);
             await page.WaitForSelectorAsync("text='上传完成'");
-
+            CallBack("上传完成，开始上传封面");
 
             #region 更改封面
             if (!string.IsNullOrEmpty(model.ImgPath))
-            {
-                // 点击更改封面
-                var changeCoverButton = await page.QuerySelectorAsync("span:text('更改封面')");
-                await changeCoverButton.ClickAsync();
+            { 
+                var upImg = new PlaywrightFileUploadHelper(page);
+                bool isOk = await upImg.UploadImgFile(model.ImgPath, "image", "span:text('封面设置')");
+                if (!isOk)
+                {
+                    CallBack("封面上传失败!"); 
+                }
+                await page.GetByText("完成", new PageGetByTextOptions { Exact = true }).ClickAsync();
                 await page.WaitForTimeoutAsync(2000);
 
-                // 上传封面
-                await page.ClickAsync("div:text('上传封面')");
-                await page.WaitForTimeoutAsync(2000);
-
-                // 设置封面图片 
-                await page.SetInputFilesAsync(".cover-select-content-upload-box", model.ImgPath);
-                await page.WaitForTimeoutAsync(2000);
             }
 
             #endregion
 
 
             // 填写视频标题 
-            await page.FillAsync("input[type=text].input-val", model.Title);
-            await page.WaitForTimeoutAsync(2000);
+            CallBack("开始输入标题，内容，分类，专题信息!");
 
+            await page.Locator("input[type='text'][placeholder=\"请输入稿件标题\"]").FillAsync(model.Title);
+            await page.WaitForTimeoutAsync(2000);
+             
+            await page.GetByText("自制").Nth(0).ClickAsync();
+
+            await page.WaitForTimeoutAsync(2000);
 
             // 选择分类 
             var categoryList = GetCategoryList();
 
 
-            if (categoryList.Count < 2)
+            if (categoryList.Count < 1)
             {
+                CallBack("失败，没有分类设置!");
                 return "没有分类设置，请在json中设置分类信息或者在当前任务的自定义配置中修改ClassList节点的值";
             }
-
+            CallBack("选择专题!");
+            // 1. 首先点击展开下拉列表
             await page.ClickAsync("div.select-container");
+            await page.WaitForTimeoutAsync(5000);
+              
+            // 2. 选择"音乐"选项
+            await page.Locator($".drop-list-v2-item[title='{categoryList[0]}']").ClickAsync();
             await page.WaitForTimeoutAsync(2000);
 
-            await page.ClickAsync($"p.f-item-content:text('{categoryList[0]}')");
-            await page.WaitForTimeoutAsync(2000);
-            await page.ClickAsync($"p.item-main:text('{categoryList[1]}')");
-            await page.WaitForTimeoutAsync(2000);
+            //await page.ClickAsync("div.select-container");
+            //await page.WaitForTimeoutAsync(2000);
+
+            //await page.ClickAsync($"p.f-item-content:text('{categoryList[0]}')");
+            //await page.WaitForTimeoutAsync(2000); 
 
             #region 添加标签
+            CallBack("开始添加标签!");
             var Tags = model.TagList();
             if (Tags.Count > 0)
             {
@@ -106,17 +117,11 @@ namespace SmartMedia.Plugins.AutoPush.Video
             }
 
             // 滚动到底部
-            await page.EvaluateAsync("() => window.scrollTo(0, document.body.scrollHeight);");
-            await page.WaitForTimeoutAsync(2000);
-
-
+            await base.ScrollToBottom(page);
 
             // 点击立即投稿
-            await page.ClickAsync("span:text('立即投稿')");
-            await page.WaitForTimeoutAsync(2000);
-            await page.CloseAsync();
-
-
+            await page.GetByText("立即投稿").ClickAsync();
+            await page.WaitForTimeoutAsync(2000); 
             return "";
 
         }

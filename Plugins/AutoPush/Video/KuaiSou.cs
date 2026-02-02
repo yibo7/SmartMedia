@@ -21,8 +21,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             get
             {
                 return new Dictionary<string, SettingCtrBase>()
-                {
-                    //{ "ClassName",BuildCtr<SettingCategories>("发布分类",initData:CategoryFileName,defaultValue:"军事,国防动态")},
+                { 
                     { "SpecialName",BuildCtr<SettingTextBox>("合集名称","可为空，你在平台上创建的合集名称") }
                 };
             }
@@ -32,14 +31,13 @@ namespace SmartMedia.Plugins.AutoPush.Video
             return await LoginCustom("https://passport.kuaishou.com/pc/account/login", "div:has-text('上传作品')");
         }
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
-        { 
+        {
+            CallBack("正在上传视频...");
             var err = base.CheckModel(model);
 
             if(!string.IsNullOrWhiteSpace(err))
                 return err;
-
-
-
+             
             await page.SetInputFilesAsync("input[type=file]", model.FilePath);
 
             await page.WaitForSelectorAsync("text='编辑画布'");
@@ -47,6 +45,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             await page.WaitForTimeoutAsync(1000);
             await page.GetByRole(AriaRole.Button, new() { Name = "Skip" }).ClickAsync();
 
+            CallBack("正在输入标题...");
             await page.WaitForTimeoutAsync(1000);
             string sDescription = $"{model.Title} \n\n {model.FormatTags()}\n\n{model.Info}";
             await page.WaitForTimeoutAsync(1000);
@@ -54,8 +53,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
             await page.WaitForTimeoutAsync(1000);
             await page.Locator("#work-description-edit").FillAsync(sDescription);
 
-            
-
+            CallBack("正在更改封面...");
             if (!string.IsNullOrWhiteSpace(model.ImgPath))
             {
 
@@ -75,7 +73,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 await page.GetByRole(AriaRole.Button, new() { Name = "确认" }).ClickAsync(); 
             }
 
-            
+            CallBack("正在选择专题...");
             var special = GetSpecialName();
             if (!string.IsNullOrWhiteSpace(special))
             {
@@ -86,7 +84,7 @@ namespace SmartMedia.Plugins.AutoPush.Video
                 await page.GetByText(special, new() { Exact = true }).ClickAsync();
                 //await page.Locator(".ant-select-selection-search").GetByText(new Regex(special)).ClickAsync();
             }
-
+            CallBack("即将发布...");
             await page.WaitForTimeoutAsync(2000); 
             await page.GetByText("发布", new() { Exact = true }).ClickAsync();
 

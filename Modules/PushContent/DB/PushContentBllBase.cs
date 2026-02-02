@@ -127,6 +127,7 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
 
                 CallBack($"【{pushPlugin.PluginName}】上传中...", iMax, CurrentCount);
                 string err = await pushPlugin.Start(model, (msg) => {
+                    Debug.WriteLine(msg);
                     CallBack(msg, iMax, CurrentCount);
                 });
                 CurrentCount++;

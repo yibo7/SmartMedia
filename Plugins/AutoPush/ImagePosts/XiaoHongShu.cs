@@ -22,7 +22,7 @@ public class XiaoHongShu : ImagePushBase
     }
     protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
     {
-
+        CallBack("开始上传图片!");
         var ImgPaths = base.GetCoverPaths(model);
         if (ImgPaths.Length < 1)
             return "没有可上传的图片";
@@ -31,8 +31,8 @@ public class XiaoHongShu : ImagePushBase
         await page.SetInputFilesAsync("input[type=file]", ImgPaths);
 
         await page.WaitForSelectorAsync("text='清空并重新上传'");
-                  
 
+        CallBack("开始设置标题!");
         if (!string.IsNullOrEmpty(model.Title))
         {
             //await page.GetByPlaceholder("填写标题，可能会有更多赞哦～").FillAsync(model.Title.CutStrLen(20));
@@ -46,7 +46,9 @@ public class XiaoHongShu : ImagePushBase
         
         await page.WaitForTimeoutAsync(1000);
         // 输入内容
-         
+
+        CallBack("开始设置简介!");
+
         #region 视频简介
         if (!string.IsNullOrWhiteSpace(model.Info))
         {
@@ -58,6 +60,8 @@ public class XiaoHongShu : ImagePushBase
         }
         #endregion
 
+
+        CallBack("开始设置专题!");
         string specialName = GetSpecialName();
 
         if (!string.IsNullOrWhiteSpace(specialName))
@@ -67,6 +71,8 @@ public class XiaoHongShu : ImagePushBase
             await page.GetByText(specialName, new() { Exact = true }).ClickAsync();
 
         }
+
+        CallBack("开始设置声明，即将发布!");
         await page.GetByText("去声明").ClickAsync();
         await page.WaitForTimeoutAsync(1000);
         await page.Locator(".d-checkbox-indicator").ClickAsync();
