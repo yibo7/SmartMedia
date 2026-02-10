@@ -36,6 +36,7 @@ namespace SmartMedia.Modules.VideoManageModule
             btnSave = new XsButton();
             splitContainer1 = new SplitContainer();
             pan1 = new Panel();
+            classCombox = new SmartMedia.Controls.ClassCombox();
             imageList = new SmartMedia.Controls.ImageList();
             publishTimer = new SmartMedia.Controls.PublishTimer();
             label12 = new Label();
@@ -129,6 +130,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // pan1
             // 
             pan1.BackColor = Color.White;
+            pan1.Controls.Add(classCombox);
             pan1.Controls.Add(imageList);
             pan1.Controls.Add(publishTimer);
             pan1.Controls.Add(label12);
@@ -146,6 +148,13 @@ namespace SmartMedia.Modules.VideoManageModule
             pan1.Name = "pan1";
             pan1.Size = new Size(504, 734);
             pan1.TabIndex = 0;
+            // 
+            // classCombox
+            // 
+            classCombox.Location = new Point(300, 625);
+            classCombox.Name = "classCombox";
+            classCombox.Size = new Size(169, 38);
+            classCombox.TabIndex = 76;
             // 
             // imageList
             // 
@@ -360,5 +369,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private Controls.PublishTimer publishTimer;
         private Controls.SiteSelectorImgPost siteSelector;
         private Controls.ImageList imageList;
+        private Controls.ClassCombox classCombox;
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using SmartMedia.AtqCore;
+using SmartMedia.Controls;
 using SmartMedia.MCore;
 using SmartMedia.Modules.PushContent.DB;
 using XS.Core2.XsExtensions;
@@ -18,9 +19,10 @@ namespace SmartMedia.Modules.VideoManageModule
             btnPlay.Visible = false;
             this.Resize += new EventHandler(Form_Resize);
             audioPlayer = new AudioPlayer();
-
+            classCombox.BindClass(2);
             if (_model != null)
             {
+                classCombox.Value = _model.ClassId;
                 txtTitle.Text = _model.Title;
 
                 txtTags.Text = _model.Tags;
@@ -120,6 +122,7 @@ namespace SmartMedia.Modules.VideoManageModule
 
             model.PublishTimeStamp = publishTimer.DateTimestamp;
 
+            model.ClassId = classCombox.Value;
 
             model.Id = _Id;
             var bll = new AudioBll();

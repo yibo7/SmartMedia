@@ -1,5 +1,6 @@
 ﻿
 using SmartMedia.AtqCore;
+using SmartMedia.Controls;
 using SmartMedia.MCore;
 using SmartMedia.Modules.PushContent.DB;
 using XS.Core2.XsExtensions;
@@ -10,8 +11,7 @@ namespace SmartMedia.Modules.VideoManageModule
 
     public partial class AddVideo : XsDockContent
     {
-
-        private const int SB_BOTH = 3;
+         
         private long _Id = 0;
         public AddVideo(PushInfo _model = null)
         {
@@ -20,11 +20,10 @@ namespace SmartMedia.Modules.VideoManageModule
 
             linkBarDelete.Visible = false;
             picCover.SizeMode = PictureBoxSizeMode.StretchImage;
-
-
-
+            classCombox.BindClass(1);
             if (_model != null)
             {
+                classCombox.Value = _model.ClassId;
                 txtTitle.Text = _model.Title;
 
                 txtTags.Text = _model.Tags;
@@ -117,6 +116,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.Sites = dicSites.ToJsonString();
 
             model.PublishTimeStamp = publishTimer.DateTimestamp;
+
+            model.ClassId = classCombox.Value;
 
             model.Id = _Id;
             var bll = new VideoBll();

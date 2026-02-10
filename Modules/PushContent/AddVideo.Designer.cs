@@ -36,6 +36,7 @@ namespace SmartMedia.Modules.VideoManageModule
             btnSave = new XsButton();
             splitContainer1 = new SplitContainer();
             pan1 = new Panel();
+            classCombox = new SmartMedia.Controls.ClassCombox();
             label5 = new Label();
             label3 = new Label();
             groupBox1 = new GroupBox();
@@ -138,6 +139,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // pan1
             // 
             pan1.BackColor = Color.White;
+            pan1.Controls.Add(classCombox);
             pan1.Controls.Add(label5);
             pan1.Controls.Add(label3);
             pan1.Controls.Add(groupBox1);
@@ -159,6 +161,13 @@ namespace SmartMedia.Modules.VideoManageModule
             pan1.Name = "pan1";
             pan1.Size = new Size(504, 734);
             pan1.TabIndex = 0;
+            // 
+            // classCombox
+            // 
+            classCombox.Location = new Point(306, 505);
+            classCombox.Name = "classCombox";
+            classCombox.Size = new Size(169, 38);
+            classCombox.TabIndex = 75;
             // 
             // label5
             // 
@@ -472,5 +481,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private XS.WinFormsTools.Controls.PictureBox picCover;
         private Label label5;
         private LinkLabel linkBarDelete;
+        private Controls.ClassCombox classCombox;
     }
 }

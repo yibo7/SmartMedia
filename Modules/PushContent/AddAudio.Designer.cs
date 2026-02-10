@@ -36,6 +36,7 @@ namespace SmartMedia.Modules.VideoManageModule
             btnSave = new XsButton();
             splitContainer1 = new SplitContainer();
             pan1 = new Panel();
+            classCombox = new SmartMedia.Controls.ClassCombox();
             btnPlay = new XsButton();
             publishTimer = new SmartMedia.Controls.PublishTimer();
             lbAudioName = new Label();
@@ -131,6 +132,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // pan1
             // 
             pan1.BackColor = Color.White;
+            pan1.Controls.Add(classCombox);
             pan1.Controls.Add(btnPlay);
             pan1.Controls.Add(publishTimer);
             pan1.Controls.Add(lbAudioName);
@@ -150,6 +152,13 @@ namespace SmartMedia.Modules.VideoManageModule
             pan1.Name = "pan1";
             pan1.Size = new Size(504, 734);
             pan1.TabIndex = 0;
+            // 
+            // classCombox
+            // 
+            classCombox.Location = new Point(306, 438);
+            classCombox.Name = "classCombox";
+            classCombox.Size = new Size(169, 38);
+            classCombox.TabIndex = 77;
             // 
             // btnPlay
             // 
@@ -395,5 +404,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private Controls.SiteSelectorAudio siteSelector; 
         private Label lbAudioName;
         private XsButton btnPlay;
+        private Controls.ClassCombox classCombox;
     }
 }

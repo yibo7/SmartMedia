@@ -19,9 +19,11 @@ namespace SmartMedia.Modules.VideoManageModule
             InitializeComponent();
             this.Resize += new EventHandler(Form_Resize);
 
-
+            classCombox.BindClass(4);
             if (_model != null)
             {
+                classCombox.Value = _model.ClassId;
+
                 txtTitle.Text = _model.Title;
 
                 txtTags.Text = _model.Tags;
@@ -96,6 +98,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.Sites = dicSites.ToJsonString();
 
             model.PublishTimeStamp = publishTimer.DateTimestamp;
+
+            model.ClassId = classCombox.Value;
 
             model.Id = _Id;
             var bll = new ImagePostBll();

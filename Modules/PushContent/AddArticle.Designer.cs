@@ -38,6 +38,7 @@ namespace SmartMedia.Modules.VideoManageModule
             htmlEditor = new XS.HtmlEditor.HtmlEditor();
             txtTitle = new XsTextBox();
             panel2 = new Panel();
+            classCombox = new SmartMedia.Controls.ClassCombox();
             publishTimer = new SmartMedia.Controls.PublishTimer();
             cbIsRc = new XS.WinFormsTools.Controls.CheckBox();
             groupBox1 = new GroupBox();
@@ -163,6 +164,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // panel2
             // 
             panel2.BackColor = Color.White;
+            panel2.Controls.Add(classCombox);
             panel2.Controls.Add(publishTimer);
             panel2.Controls.Add(cbIsRc);
             panel2.Controls.Add(groupBox1);
@@ -175,6 +177,13 @@ namespace SmartMedia.Modules.VideoManageModule
             panel2.Name = "panel2";
             panel2.Size = new Size(748, 213);
             panel2.TabIndex = 3;
+            // 
+            // classCombox
+            // 
+            classCombox.Location = new Point(13, 128);
+            classCombox.Name = "classCombox";
+            classCombox.Size = new Size(169, 38);
+            classCombox.TabIndex = 76;
             // 
             // publishTimer
             // 
@@ -348,5 +357,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private Controls.PublishTimer publishTimer;
         private XS.WinFormsTools.Controls.CheckBox cbIsRc;
         private XS.HtmlEditor.HtmlEditor htmlEditor;
+        private Controls.ClassCombox classCombox;
     }
 }

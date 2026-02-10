@@ -13,7 +13,7 @@ namespace SmartMedia.Modules.PushContent.DB;
 
 abstract public class PushContentBllBase : LiteDbInt<PushInfo>
 {
-    abstract protected int IType { get; }
+    abstract public int IType { get; }
     abstract public string Title { get; }
     /// <summary>
     /// 打开添加窗口
@@ -52,7 +52,7 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
     }
 
     abstract public SiteSelector NewSiteSelector();
-    public List<PushInfo> Search(int status = -1, string keyword = "")
+    public List<PushInfo> Search(int status = -1, string keyword = "",int ClassId=0)
     {
         int limit = 1000;
         string query = $"IType = {IType}";
@@ -66,6 +66,11 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
         if (status > -1)
         {
             query += $" AND Status = {status}";
+        }
+
+        if (ClassId > 0)
+        {
+            query += $" AND ClassId = {ClassId}";
         }
 
         // 按位置传参：query, limit, orderBy, descending

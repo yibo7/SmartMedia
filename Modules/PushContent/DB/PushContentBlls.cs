@@ -11,7 +11,7 @@ namespace SmartMedia.Modules.PushContent.DB;
 
 internal class VideoBll : PushContentBllBase
 {
-    override protected int IType => 1;
+    override public int IType => 1;
     override public string Title => "视频";
 
     override public void OnOpenAdd(long Id)
@@ -50,7 +50,7 @@ internal class VideoBll : PushContentBllBase
 
 internal class AudioBll : PushContentBllBase
 {
-    override protected int IType => 2;
+    override public int IType => 2;
     override public string Title => "音频";
     override public void OnOpenAdd(long Id)
     {
@@ -76,7 +76,7 @@ internal class AudioBll : PushContentBllBase
 }
 internal class ArticleBll : PushContentBllBase
 {
-    override protected int IType => 3;
+    override public int IType => 3;
     override public string Title => "文章";
     override public void OnOpenAdd(long Id)
     {
@@ -99,7 +99,7 @@ internal class ArticleBll : PushContentBllBase
 
 internal class ImagePostBll : PushContentBllBase
 {
-    override protected int IType => 4;
+    override public int IType => 4;
     override public string Title => "图文";
     override public void OnOpenAdd(long Id)
     {

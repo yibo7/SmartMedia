@@ -1,6 +1,7 @@
 ﻿
 using Google.Protobuf.WellKnownTypes;
 using SmartMedia.MCore;
+using SmartMedia.Modules.PushContent;
 using SmartMedia.Modules.PushContent.DB;
 using XS.Core2;
 using XS.Core2.XsExtensions;
@@ -42,7 +43,9 @@ namespace SmartMedia.Modules.VideoManageModule
 
         private void ModuleMain_Load(object? sender, EventArgs e)
         {
+            BindClass();
             BindData();
+            
         }
 
         private void btcMyWritter_Click(object sender, EventArgs e)
@@ -66,7 +69,9 @@ namespace SmartMedia.Modules.VideoManageModule
         private void BindData(int status = -1, string keyword = "")
         {
             lvData.Items.Clear();
-            var lst = dataBll.Search(status, keyword);
+            int iClassId = cbClass.ComboBox.SelectedValue.ToString().ToInt();
+
+            var lst = dataBll.Search(status, keyword, iClassId);
 
 
             foreach (var item in lst)
@@ -80,8 +85,27 @@ namespace SmartMedia.Modules.VideoManageModule
             }
 
             lbStatusBar.Text = $"共有记录{lst.Count}条";
+            
+            
         }
+        private void BindClass()
+        {
+            // 添加默认分类
+            var defaultItem = new PushContentClass { Id = 0, ClassName = "所有分类" };
+            var bllClass = new PushContentClassBll();
+            var classList = bllClass.FindByTypeId(dataBll.IType);
+            // 绑定到ToolStripComboBox
+            cbClass.ComboBox.DataSource = new List<PushContentClass>(classList)
+                .Prepend(defaultItem)  // 将默认项添加到开头
+                .ToList();
 
+            // 设置显示和值字段
+            cbClass.ComboBox.DisplayMember = "ClassName";
+            cbClass.ComboBox.ValueMember = "Id";
+
+            // 可选：设置默认选中项
+            cbClass.ComboBox.SelectedIndex = 0;
+        }
         private void btnSearch_Click(object sender, EventArgs e)
         {
             string key = txtSearchKey.Text.Trim();
@@ -252,9 +276,16 @@ namespace SmartMedia.Modules.VideoManageModule
         }
 
         private void btnImport_Click(object sender, EventArgs e)
-        { 
+        {
             var win = new EventArgsOnShowWin(new ImportDatas(dataBll), $"批量导入[{dataBll.Title}]");
             ModuleUtils.OnEvShowToRight(win);
+        }
+
+        private void btnOpenClassManager_Click(object sender, EventArgs e)
+        {
+            
+            var win = new ClassManager(dataBll.IType);
+            win.ShowDialog();
         }
     }
 }

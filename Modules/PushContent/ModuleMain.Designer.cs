@@ -25,10 +25,13 @@ namespace SmartMedia.Modules.VideoManageModule
             设为已发布ToolStripMenuItem = new ToolStripMenuItem();
             重置为未发布ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new XsToolBar();
+            btnOpenClassManager = new ToolStripButton();
+            btnImport = new ToolStripButton();
             btnDelSels = new ToolStripButton();
             toolStripLabel1 = new ToolStripLabel();
             txtSearchKey = new ToolStripTextBox();
             cbStatus = new ToolStripComboBox();
+            cbClass = new ToolStripComboBox();
             btnSearch = new ToolStripButton();
             toolStripMenuItem1 = new ToolStripMenuItem();
             contextMenuStrip1 = new ContextMenuStrip(components);
@@ -48,7 +51,6 @@ namespace SmartMedia.Modules.VideoManageModule
             toolStrip2 = new XsToolBar();
             btnJobImg = new ToolStripButton();
             lbContentName = new ToolStripLabel();
-            btnImport = new ToolStripButton();
             menuContext.SuspendLayout();
             toolStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
@@ -107,7 +109,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // toolStrip1
             // 
             toolStrip1.GripMargin = new Padding(3);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { btnImport, btnDelSels, toolStripLabel1, txtSearchKey, cbStatus, btnSearch });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { btnOpenClassManager, btnImport, btnDelSels, toolStripLabel1, txtSearchKey, cbStatus, cbClass, btnSearch });
             toolStrip1.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
@@ -115,6 +117,27 @@ namespace SmartMedia.Modules.VideoManageModule
             toolStrip1.Size = new Size(990, 39);
             toolStrip1.TabIndex = 6;
             toolStrip1.Text = "toolStrip1";
+            // 
+            // btnOpenClassManager
+            // 
+            btnOpenClassManager.Alignment = ToolStripItemAlignment.Right;
+            btnOpenClassManager.Image = Resource.doc;
+            btnOpenClassManager.ImageTransparentColor = Color.Magenta;
+            btnOpenClassManager.Name = "btnOpenClassManager";
+            btnOpenClassManager.Size = new Size(76, 36);
+            btnOpenClassManager.Text = "管理分类";
+            btnOpenClassManager.Click += btnOpenClassManager_Click;
+            // 
+            // btnImport
+            // 
+            btnImport.Alignment = ToolStripItemAlignment.Right;
+            btnImport.Image = Resource.putin;
+            btnImport.ImageScaling = ToolStripItemImageScaling.None;
+            btnImport.ImageTransparentColor = Color.Magenta;
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(92, 36);
+            btnImport.Text = "批量导入";
+            btnImport.Click += btnImport_Click;
             // 
             // btnDelSels
             // 
@@ -140,7 +163,7 @@ namespace SmartMedia.Modules.VideoManageModule
             txtSearchKey.BorderStyle = BorderStyle.None;
             txtSearchKey.Font = new Font("Microsoft YaHei UI", 14F);
             txtSearchKey.Name = "txtSearchKey";
-            txtSearchKey.Size = new Size(300, 39);
+            txtSearchKey.Size = new Size(150, 39);
             // 
             // cbStatus
             // 
@@ -148,6 +171,13 @@ namespace SmartMedia.Modules.VideoManageModule
             cbStatus.Items.AddRange(new object[] { "所有状态", "待发布", "已发布" });
             cbStatus.Name = "cbStatus";
             cbStatus.Size = new Size(121, 39);
+            // 
+            // cbClass
+            // 
+            cbClass.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbClass.Items.AddRange(new object[] { "所有状态", "待发布", "已发布" });
+            cbClass.Name = "cbClass";
+            cbClass.Size = new Size(121, 39);
             // 
             // btnSearch
             // 
@@ -376,17 +406,6 @@ namespace SmartMedia.Modules.VideoManageModule
             lbContentName.Size = new Size(56, 22);
             lbContentName.Text = "内容详情";
             // 
-            // btnImport
-            // 
-            btnImport.Alignment = ToolStripItemAlignment.Right;
-            btnImport.Image = Resource.putin;
-            btnImport.ImageScaling = ToolStripItemImageScaling.None;
-            btnImport.ImageTransparentColor = Color.Magenta;
-            btnImport.Name = "btnImport";
-            btnImport.Size = new Size(92, 36);
-            btnImport.Text = "批量导入";
-            btnImport.Click += btnImport_Click;
-            // 
             // ModuleMain
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -458,5 +477,7 @@ namespace SmartMedia.Modules.VideoManageModule
         private Label label1;
         private ToolStripMenuItem 设为已发布ToolStripMenuItem;
         private ToolStripButton btnImport;
+        private ToolStripButton btnOpenClassManager;
+        private ToolStripComboBox cbClass;
     }
 }

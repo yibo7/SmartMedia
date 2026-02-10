@@ -32,7 +32,7 @@ public class PushInfo : LiteModelBaseInt
     /// </summary>
     public long PublishTimeStamp { get; set; }
     public string PublishLog { get; set; } // 发布日志，可以是成功日志，也可以是错误日志
-
+    public int ClassId { get; set; }
     //public string SrtLrc { get; set; } // 字幕内容还是路径根据不同的平台要求
     /// <summary>
     /// 将站点配置转换字典
