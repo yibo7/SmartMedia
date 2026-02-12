@@ -13,14 +13,16 @@ namespace SmartMedia.Modules.VideoManageModule
     {
          
         private long _Id = 0;
-        public AddVideo(PushInfo _model = null)
+        private PushContentBllBase pushContentBll;
+        public AddVideo(PushContentBllBase bllData,PushInfo _model = null)
         {
+            pushContentBll = bllData;
             InitializeComponent();
             this.Resize += new EventHandler(Form_Resize);
 
             linkBarDelete.Visible = false;
             picCover.SizeMode = PictureBoxSizeMode.StretchImage;
-            classCombox.BindClass(1);
+            classCombox.BindClass(pushContentBll.IType);
             if (_model != null)
             {
                 classCombox.Value = _model.ClassId;
@@ -120,8 +122,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.ClassId = classCombox.Value;
 
             model.Id = _Id;
-            var bll = new VideoBll();
-            (string msg, long Id) = bll.AddData(model);
+            //var bll = new VideoBll();
+            (string msg, long Id) = pushContentBll.AddData(model);
             if (!string.IsNullOrWhiteSpace(msg))
             {
                 Tips(msg);
@@ -146,8 +148,8 @@ namespace SmartMedia.Modules.VideoManageModule
                     frmLoading.ToDo(100, 0, "正在加载上传插件...");
                     try
                     {
-                        var bll = new VideoBll();
-                        await bll.StartPush(_Id, (tips, imax, icurrent) =>
+                        //var bll = new VideoBll();
+                        await pushContentBll.StartPush(_Id, (tips, imax, icurrent) =>
                         {
                             frmLoading.ToDo(imax, icurrent, tips);
                         });

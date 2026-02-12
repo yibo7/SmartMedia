@@ -19,13 +19,13 @@ internal class VideoBll : PushContentBllBase
         if (Id > 0)
         {
             var model = GetEntity(Id);
-            var addWin = new AddVideo(model);
+            var addWin = new AddVideo(this,model);
             var win = new EventArgsOnShowWin(addWin, $"修改视频-{model.Title}");
             ModuleUtils.OnEvShowToRight(win);
         }
         else
         {
-            var addWin = new AddVideo();
+            var addWin = new AddVideo(this,null);
             var win = new EventArgsOnShowWin(addWin, $"新建视频");
             ModuleUtils.OnEvShowToRight(win);
         }
@@ -55,7 +55,7 @@ internal class AudioBll : PushContentBllBase
     override public void OnOpenAdd(long Id)
     {
         var model = GetEntity(Id);
-        var addWin = new AddAudio(model);
+        var addWin = new AddAudio(this,model);
         var win = new EventArgsOnShowWin(addWin, "发布音频");
         ModuleUtils.OnEvShowToRight(win);
 
@@ -81,7 +81,7 @@ internal class ArticleBll : PushContentBllBase
     override public void OnOpenAdd(long Id)
     {
         var model = GetEntity(Id);
-        var addWin = new AddArticle(model);
+        var addWin = new AddArticle(this,model);
         var win = new EventArgsOnShowWin(addWin, "发布文章");
         ModuleUtils.OnEvShowToRight(win);
     }
@@ -104,7 +104,7 @@ internal class ImagePostBll : PushContentBllBase
     override public void OnOpenAdd(long Id)
     {
         var model = GetEntity(Id);
-        var addWin = new AddImagePost(model);
+        var addWin = new AddImagePost(this, model);
         var win = new EventArgsOnShowWin(addWin, "发布图文");
         ModuleUtils.OnEvShowToRight(win);
     }

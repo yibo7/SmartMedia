@@ -11,15 +11,16 @@ namespace SmartMedia.Modules.VideoManageModule
 
     public partial class AddAudio : XsDockContent
     {
-         
+        private PushContentBllBase pushContentBll;
         private long _Id = 0;
-        public AddAudio(PushInfo _model = null)
+        public AddAudio(PushContentBllBase bllData, PushInfo _model = null)
         {
+            pushContentBll = bllData;
             InitializeComponent();
             btnPlay.Visible = false;
             this.Resize += new EventHandler(Form_Resize);
             audioPlayer = new AudioPlayer();
-            classCombox.BindClass(2);
+            classCombox.BindClass(pushContentBll.IType);
             if (_model != null)
             {
                 classCombox.Value = _model.ClassId;
@@ -125,8 +126,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.ClassId = classCombox.Value;
 
             model.Id = _Id;
-            var bll = new AudioBll();
-            (string msg, long Id) = bll.AddData(model);
+            //var bll = new AudioBll();
+            (string msg, long Id) = pushContentBll.AddData(model);
             if (!string.IsNullOrWhiteSpace(msg))
             {
                 Tips(msg);
@@ -151,8 +152,8 @@ namespace SmartMedia.Modules.VideoManageModule
                     frmLoading.ToDo(100, 0, "正在加载上传插件...");
                     try
                     {
-                        var bll = new AudioBll();
-                        await bll.StartPush(_Id, (tips, imax, icurrent) =>
+                        //var bll = new AudioBll();
+                        await pushContentBll.StartPush(_Id, (tips, imax, icurrent) =>
                         {
                             frmLoading.ToDo(imax, icurrent, tips);
                         });

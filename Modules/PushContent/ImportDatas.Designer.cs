@@ -33,6 +33,7 @@ namespace SmartMedia.Modules.VideoManageModule
             btnSave = new XsButton();
             splitContainer1 = new SplitContainer();
             pan1 = new Panel();
+            classCombox = new SmartMedia.Controls.ClassCombox();
             lbErrInfo = new Label();
             lbShowJsonMap = new LinkLabel();
             cbIsOriginal = new XS.WinFormsTools.Controls.CheckBox();
@@ -79,6 +80,7 @@ namespace SmartMedia.Modules.VideoManageModule
             // pan1
             // 
             pan1.BackColor = Color.White;
+            pan1.Controls.Add(classCombox);
             pan1.Controls.Add(lbErrInfo);
             pan1.Controls.Add(btnSave);
             pan1.Controls.Add(lbShowJsonMap);
@@ -92,6 +94,13 @@ namespace SmartMedia.Modules.VideoManageModule
             pan1.Name = "pan1";
             pan1.Size = new Size(440, 643);
             pan1.TabIndex = 0;
+            // 
+            // classCombox
+            // 
+            classCombox.Location = new Point(250, 80);
+            classCombox.Name = "classCombox";
+            classCombox.Size = new Size(169, 38);
+            classCombox.TabIndex = 77;
             // 
             // lbErrInfo
             // 
@@ -208,5 +217,6 @@ namespace SmartMedia.Modules.VideoManageModule
         private XS.WinFormsTools.Controls.CheckBox cbIsOriginal;
         private LinkLabel lbShowJsonMap;
         private Label lbErrInfo;
+        private Controls.ClassCombox classCombox;
     }
 }

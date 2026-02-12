@@ -11,17 +11,18 @@ namespace SmartMedia.Modules.VideoManageModule
 
     public partial class AddArticle : XsDockContent
     {
-
+        private PushContentBllBase pushContentBll;
         private long _Id = 0;
-        public AddArticle(PushInfo _model = null)
+        public AddArticle(PushContentBllBase bllData, PushInfo _model = null)
         {
+            pushContentBll = bllData;
             InitializeComponent();
             this.Resize += new EventHandler(Form_Resize);
 
             linkBarDelete.Visible = false;
             picCover.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            classCombox.BindClass(3);
+            classCombox.BindClass(pushContentBll.IType);
 
             if (_model != null)
             {
@@ -76,10 +77,7 @@ namespace SmartMedia.Modules.VideoManageModule
         {
             panelCenter.Left = (panel1.Width - panelCenter.Width) / 2;
             panelCenter.Top = (panel1.Height - panelCenter.Height) / 2; // 可选：同时居中垂直位置
-        }
-
-
-         
+        } 
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -128,8 +126,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.ClassId = classCombox.Value;
 
             model.Id = _Id;
-            var bll = new ArticleBll();
-            (string msg, long Id) = bll.AddData(model);
+            //var bll = new ArticleBll();
+            (string msg, long Id) = pushContentBll.AddData(model);
             if (!string.IsNullOrWhiteSpace(msg))
             {
                 Tips(msg);
@@ -154,8 +152,8 @@ namespace SmartMedia.Modules.VideoManageModule
                     frmLoading.ToDo(100, 0, "正在加载上传插件...");
                     try
                     {
-                        var bll = new VideoBll();
-                        await bll.StartPush(_Id, (tips, imax, icurrent) =>
+                        //var bll = new VideoBll();
+                        await pushContentBll.StartPush(_Id, (tips, imax, icurrent) =>
                         {
                             frmLoading.ToDo(imax, icurrent, tips);
                         });

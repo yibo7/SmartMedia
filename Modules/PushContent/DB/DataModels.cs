@@ -203,5 +203,9 @@ public class ImportModel
 
     [JsonIgnore]
     public int Original { get; set; }
-    
+
+    [JsonIgnore]
+    public int ClassId { get; set; }
+     
+
 }

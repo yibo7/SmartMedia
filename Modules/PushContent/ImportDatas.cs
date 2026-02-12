@@ -35,7 +35,9 @@ public partial class ImportDatas : XsDockContent
         siteSelector.Size = new Size(782, 734);
         siteSelector.TabIndex = 0;
          
-        this.Text = pushContentBll.Title; 
+        this.Text = pushContentBll.Title;
+
+        classCombox.BindClass(pushContentBll.IType);
 
     }
 
@@ -103,6 +105,7 @@ public partial class ImportDatas : XsDockContent
 
             model.Sites = dicSites?.ToJsonString() ?? "{}"; // 添加空值检查
             model.Original = cbIsOriginal.Checked?1:0;
+            model.ClassId = classCombox.Value;
             iIndex++; // 索引递增
         }
 

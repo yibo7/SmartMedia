@@ -36,7 +36,8 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
 
             model.FilePath = item.FilePath;
             model.ImgPath = item.ImgPath;
-             
+            
+            model.ClassId = item.ClassId;   
 
             model.Sites = item.Sites;
 

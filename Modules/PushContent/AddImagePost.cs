@@ -12,14 +12,15 @@ namespace SmartMedia.Modules.VideoManageModule
     public partial class AddImagePost : XsDockContent
     {
 
-        private const int SB_BOTH = 3;
+        private PushContentBllBase pushContentBll;
         private long _Id = 0;
-        public AddImagePost(PushInfo _model = null)
+        public AddImagePost(PushContentBllBase bllData, PushInfo _model = null)
         {
+            pushContentBll = bllData;
             InitializeComponent();
             this.Resize += new EventHandler(Form_Resize);
 
-            classCombox.BindClass(4);
+            classCombox.BindClass(pushContentBll.IType);
             if (_model != null)
             {
                 classCombox.Value = _model.ClassId;
@@ -102,8 +103,8 @@ namespace SmartMedia.Modules.VideoManageModule
             model.ClassId = classCombox.Value;
 
             model.Id = _Id;
-            var bll = new ImagePostBll();
-            (string msg, long Id) = bll.AddData(model);
+            //var bll = new ImagePostBll();
+            (string msg, long Id) = pushContentBll.AddData(model);
             if (!string.IsNullOrWhiteSpace(msg))
             {
                 Tips(msg);
@@ -127,8 +128,8 @@ namespace SmartMedia.Modules.VideoManageModule
                     frmLoading.ToDo(100, 0, "正在加载上传插件...");
                     try
                     {
-                        var bll = new ImagePostBll();
-                        await bll.StartPush(_Id, (tips, imax, icurrent) =>
+                        //var bll = new ImagePostBll();
+                        await pushContentBll.StartPush(_Id, (tips, imax, icurrent) =>
                         {
                             frmLoading.ToDo(imax, icurrent, tips);
                         });
