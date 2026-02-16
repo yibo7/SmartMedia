@@ -10,7 +10,7 @@ namespace SmartMedia.Controls
         {
             InitializeComponent();
             AutoSize = true;
-            picCoverImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            picCoverImage.SizeMode = PictureBoxSizeMode.Zoom;
             linkBarDelete.Visible = false;
         }
 

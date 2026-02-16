@@ -559,5 +559,34 @@ abstract public class PushBase : PluginBase
 
     #endregion
 
+    /// <summary>
+    /// 修复文件路径格式
+    /// </summary>
+    protected string GetFullPath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return path;
 
+        // 移除开头的 .\\
+        if (path.StartsWith(".\\") || path.StartsWith("./"))
+        {
+            path = path.Substring(2);
+        }
+        else if (path.StartsWith(".\\\\") || path.StartsWith(".//"))
+        {
+            path = path.Substring(3);
+        }
+
+        // 替换双反斜杠为单反斜杠
+        path = path.Replace("\\\\", "\\").Replace("//", "/");
+
+        // 如果还不是绝对路径，转换为绝对路径
+        if (!Path.IsPathRooted(path))
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            path = Path.Combine(baseDir, path);
+        }
+
+        return path;
+    } 
 }

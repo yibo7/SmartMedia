@@ -232,7 +232,7 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
 
         model.MdWu = sMd5;// $"{model.FilePath}{model.Sites}".Md5();
 
-
+        CopyModelFiles(model);
         if (model.Id > 0)
         {
             this.Update(model);
@@ -246,7 +246,13 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
             model.Id = Id;
         }
 
-        #region copy files
+       
+
+        return ("", model.Id);
+    }
+
+    private PushInfo CopyModelFiles(PushInfo model)
+    { 
 
         if (Settings.Instance.IsCopyFiles == 1)
         {
@@ -278,17 +284,42 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
                         var platformName = site.Key;
                         var platformData = site.Value as JObject;
 
-                        if (platformData != null && platformData["picCoverImage"] != null)
+                        if (platformData != null)
                         {
-                            string picCoverImagePath = platformData["picCoverImage"].ToString();
+                            // 获取所有属性
+                            var properties = platformData.Properties().ToList();
 
-                            if (!string.IsNullOrEmpty(picCoverImagePath))
+                            foreach (var property in properties)
                             {
-                                // 复制图片文件并获取新路径
-                                string newImagePath = CopyFileToSubDirectory(picCoverImagePath, "Images", $"{platformName}封面图片");
+                                // 检查属性名是否以 "picCoverImage" 开头
+                                if (property.Name.StartsWith("picCoverImage"))
+                                {
+                                    string imagePath = property.Value?.ToString();
 
-                                // 更新 JSON 中的路径
-                                platformData["picCoverImage"] = newImagePath;
+                                    if (!string.IsNullOrEmpty(imagePath))
+                                    {
+                                        try
+                                        {
+                                            // 复制图片文件并获取新路径
+                                            string newImagePath = CopyFileToSubDirectory(
+                                                imagePath,
+                                                "Images",
+                                                $"{platformName}_{property.Name}"
+                                            );
+
+                                            // 更新 JSON 中的路径
+                                            platformData[property.Name] = newImagePath;
+
+                                            //Debug.WriteLine($"已更新 {platformName} 的 {property.Name}: {newImagePath}");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Debug.WriteLine($"处理 {platformName} 的 {property.Name} 时出错: {ex.Message}");
+                                            // 可以选择保留原路径或设置为空
+                                            // platformData[property.Name] = null;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -305,10 +336,11 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
 
         }
 
-        #endregion
+        return model;
 
-        return ("", model.Id);
+
     }
+
     // 处理多个图片文件路径的方法
     private string ProcessMultipleImageFiles(string filePaths)
     {
@@ -361,20 +393,77 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
             // 确保目标目录存在
             Directory.CreateDirectory(targetDirectory);
 
-            // 获取文件名并构建目标路径
-            string fileName = Path.GetFileName(sourceFilePath);
-            string targetPath = Path.Combine(targetDirectory, fileName);
+            // 获取文件名和扩展名
+            string fileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string extension = Path.GetExtension(sourceFilePath);
 
-            // 检查目标文件是否已存在
-            if (!File.Exists(targetPath))
+            // 计算源文件的MD5值
+            string sourceFileMD5 = CalculateMD5(sourceFilePath);
+
+            // 构建初始目标路径
+            string targetFileName = fileName + extension;
+            string targetPath = Path.Combine(targetDirectory, targetFileName);
+
+            // 检查目标文件是否存在
+            if (File.Exists(targetPath))
             {
-                File.Copy(sourceFilePath, targetPath);
-                Debug.WriteLine($"{fileTypeDescription}已复制到: {targetPath}");
+                // 计算已存在文件的MD5值
+                string existingFileMD5 = CalculateMD5(targetPath);
+
+                // 如果MD5相同，说明是同一个文件，直接返回现有路径
+                if (sourceFileMD5 == existingFileMD5)
+                {
+                    Debug.WriteLine($"{fileTypeDescription}已存在且内容相同，直接使用现有文件: {targetPath}");
+                    return targetPath;
+                }
+
+                // MD5不同，说明是不同文件，需要生成带数字序号的新文件名
+                Debug.WriteLine($"{fileTypeDescription}已存在但内容不同，将创建新版本");
+
+                int counter = 2; // 从2开始计数
+                bool fileExists;
+
+                do
+                {
+                    // 生成新文件名：原文件名_数字.扩展名
+                    targetFileName = $"{fileName}_{counter}{extension}";
+                    targetPath = Path.Combine(targetDirectory, targetFileName);
+
+                    // 如果文件存在，检查MD5是否相同
+                    if (File.Exists(targetPath))
+                    {
+                        string newFileMD5 = CalculateMD5(targetPath);
+
+                        // 如果MD5相同，直接返回这个现有文件
+                        if (sourceFileMD5 == newFileMD5)
+                        {
+                            Debug.WriteLine($"{fileTypeDescription}内容与现有文件相同: {targetPath}");
+                            return targetPath;
+                        }
+
+                        // 如果MD5不同，继续尝试下一个序号
+                        fileExists = true;
+                    }
+                    else
+                    {
+                        // 文件不存在，可以创建
+                        fileExists = false;
+                    }
+
+                    counter++;
+
+                    // 防止无限循环（理论上是不会的，但为了安全）
+                    if (counter > 1000) // 设置一个上限
+                    {
+                        Debug.WriteLine($"警告：已尝试{counter - 1}个序号，可能存在异常");
+                        break;
+                    }
+                } while (fileExists);
             }
-            else
-            {
-                Debug.WriteLine($"{fileTypeDescription}已存在: {targetPath}");
-            }
+
+            // 复制文件
+            File.Copy(sourceFilePath, targetPath);
+            Debug.WriteLine($"{fileTypeDescription}已复制到: {targetPath}");
 
             // 返回新路径
             return targetPath;
@@ -383,6 +472,19 @@ abstract public class PushContentBllBase : LiteDbInt<PushInfo>
         {
             Debug.WriteLine($"复制{fileTypeDescription}时出错: {ex.Message}");
             return sourceFilePath; // 出错时返回原路径
+        }
+    }
+
+    // 辅助函数：计算文件的MD5值
+    private string CalculateMD5(string filePath)
+    {
+        using (var md5 = System.Security.Cryptography.MD5.Create())
+        {
+            using (var stream = File.OpenRead(filePath))
+            {
+                byte[] hash = md5.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
         }
     }
 }
