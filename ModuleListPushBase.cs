@@ -18,6 +18,12 @@ public partial class ModuleListPushBase : DockContent
     {
         InitializeComponent();
 
+        //if (DesignMode)
+        //{
+        //    // 设计模式下的简化初始化
+        //    return;
+        //}
+
         dataBll = bll;
         CloseButtonVisible = false; // 隐藏关闭按钮 
 

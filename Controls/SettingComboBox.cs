@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using XS.Core2.XsExtensions;
 
 namespace SmartMedia.Controls
 {
@@ -11,11 +12,14 @@ namespace SmartMedia.Controls
 
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
-         
 
+        /// <summary>
+        /// 设置下拉选项
+        /// </summary>
+        /// <param name="sItems">多个选项用###号分开</param>
         override public void InitData(string sItems)
         {
-            string[] items = sItems.Split(',');
+            string[] items = sItems.SplitByTag("###");
             if (items.Length > 0)
             {
                 comboBox.DataSource = items;

@@ -6,9 +6,7 @@ namespace SmartMedia.Plugins.AutoPush.ImagePosts;
 
 public class XiaoHongShu : ImagePushBase
 {
-    override protected Dictionary<string, SettingCtrBase> SiteCtrls => new Dictionary<string, SettingCtrBase>()
-    {
-    };
+   
      
     protected override string UploadPage => "https://creator.xiaohongshu.com/publish/publish?from=menu&target=image";
 

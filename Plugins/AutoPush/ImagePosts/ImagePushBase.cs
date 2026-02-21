@@ -22,6 +22,10 @@ namespace SmartMedia.Plugins.AutoPush.ImagePosts
 
         //    return result;
         //}
+
+        override protected Dictionary<string, SettingCtrBase> SiteCtrls => new Dictionary<string, SettingCtrBase>()
+        {
+        };
         /// <summary>
         /// 获取图文列表
         /// </summary>

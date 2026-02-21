@@ -13,7 +13,8 @@ namespace SmartMedia.Controls
 
         override public void SetValue(string value)
         {
-            this.cbCheckBox.Checked = value.ToBool();
+            if(!string.IsNullOrWhiteSpace(value))
+                this.cbCheckBox.Checked = value.ToBool();
         }
 
         [Category("设置文本")]

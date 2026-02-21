@@ -67,8 +67,9 @@ abstract public class PushBase : PluginBase
 
         if (!string.IsNullOrEmpty(title)) ctr.SetTitle(title);
         if (!string.IsNullOrEmpty(tips)) ctr.SetTips(tips);
-        if (!string.IsNullOrEmpty(defaultValue)) ctr.SetValue(defaultValue);
         if (!string.IsNullOrEmpty(initData)) ctr.InitData(initData);
+
+        if (!string.IsNullOrEmpty(defaultValue)) ctr.SetValue(defaultValue);
 
         return ctr;
     }
