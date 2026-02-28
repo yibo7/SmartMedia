@@ -1,0 +1,15 @@
+﻿
+
+using SmartMedia.Core.SitesBase;
+
+namespace SmartMedia.Core.Controls;
+
+public class SiteSelectorImgPost : SiteSelector
+{
+    override protected List<PushBase> GetPushPlugins()
+    {
+        //获取所有发布插件
+        return PluginUtils.ImagePushList.Cast<PushBase>().ToList();
+
+    }
+}

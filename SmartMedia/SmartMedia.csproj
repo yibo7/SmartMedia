@@ -1,0 +1,327 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+	  <VersionPrefix>1.0.0</VersionPrefix>  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AudioConverter\**" />
+    <Compile Remove="doc\**" />
+    <Compile Remove="FfmpegCore\**" />
+    <Compile Remove="jieba\**" />
+    <Compile Remove="Jobs\**" />
+    <Compile Remove="JobUtils\**" />
+    <Compile Remove="libs\**" />
+    <Compile Remove="Modules\AiWritter\**" />
+    <Compile Remove="Modules\AskAiAnser\**" />
+    <Compile Remove="Modules\HotWords\**" />
+    <Compile Remove="Modules\LiveStreaming\**" />
+    <Compile Remove="Modules\PushContent\DB\**" />
+    <Compile Remove="Modules\VideoAutoRecoder\**" />
+    <Compile Remove="PianoScoreData\**" />
+    <Compile Remove="Plugins\**" />
+    <Compile Remove="Python\**" />
+    <EmbeddedResource Remove="AudioConverter\**" />
+    <EmbeddedResource Remove="doc\**" />
+    <EmbeddedResource Remove="FfmpegCore\**" />
+    <EmbeddedResource Remove="jieba\**" />
+    <EmbeddedResource Remove="Jobs\**" />
+    <EmbeddedResource Remove="JobUtils\**" />
+    <EmbeddedResource Remove="libs\**" />
+    <EmbeddedResource Remove="Modules\AiWritter\**" />
+    <EmbeddedResource Remove="Modules\AskAiAnser\**" />
+    <EmbeddedResource Remove="Modules\HotWords\**" />
+    <EmbeddedResource Remove="Modules\LiveStreaming\**" />
+    <EmbeddedResource Remove="Modules\PushContent\DB\**" />
+    <EmbeddedResource Remove="Modules\VideoAutoRecoder\**" />
+    <EmbeddedResource Remove="PianoScoreData\**" />
+    <EmbeddedResource Remove="Plugins\**" />
+    <EmbeddedResource Remove="Python\**" />
+    <None Remove="AudioConverter\**" />
+    <None Remove="doc\**" />
+    <None Remove="FfmpegCore\**" />
+    <None Remove="jieba\**" />
+    <None Remove="Jobs\**" />
+    <None Remove="JobUtils\**" />
+    <None Remove="libs\**" />
+    <None Remove="Modules\AiWritter\**" />
+    <None Remove="Modules\AskAiAnser\**" />
+    <None Remove="Modules\HotWords\**" />
+    <None Remove="Modules\LiveStreaming\**" />
+    <None Remove="Modules\PushContent\DB\**" />
+    <None Remove="Modules\VideoAutoRecoder\**" />
+    <None Remove="PianoScoreData\**" />
+    <None Remove="Plugins\**" />
+    <None Remove="Python\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="About.cs" />
+    <Compile Remove="About.Designer.cs" />
+    <Compile Remove="Controls\AiServiceSelector.cs" />
+    <Compile Remove="Controls\AiServiceSelector.Designer.cs" />
+    <Compile Remove="Controls\BaseForm.cs" />
+    <Compile Remove="Controls\BaseForm.Designer.cs" />
+    <Compile Remove="Controls\ClassCombox.cs" />
+    <Compile Remove="Controls\ClassCombox.Designer.cs" />
+    <Compile Remove="Controls\ImageList.cs" />
+    <Compile Remove="Controls\ImageList.Designer.cs" />
+    <Compile Remove="Controls\PublishTimer.cs" />
+    <Compile Remove="Controls\PublishTimer.Designer.cs" />
+    <Compile Remove="Controls\PublishTimes.cs" />
+    <Compile Remove="Controls\PublishTimes.Designer.cs" />
+    <Compile Remove="Controls\SettingCategories.cs" />
+    <Compile Remove="Controls\SettingCategories.Designer.cs" />
+    <Compile Remove="Controls\SettingCheckBox.cs" />
+    <Compile Remove="Controls\SettingCheckBox.Designer.cs" />
+    <Compile Remove="Controls\SettingComboBox.cs" />
+    <Compile Remove="Controls\SettingComboBox.Designer.cs" />
+    <Compile Remove="Controls\SettingCoverImage.cs" />
+    <Compile Remove="Controls\SettingCoverImage.Designer.cs" />
+    <Compile Remove="Controls\SettingCtrBase.cs" />
+    <Compile Remove="Controls\SettingCtrBase.Designer.cs" />
+    <Compile Remove="Controls\SettingSrtLrc.cs" />
+    <Compile Remove="Controls\SettingSrtLrc.Designer.cs" />
+    <Compile Remove="Controls\SettingTextBox.cs" />
+    <Compile Remove="Controls\SettingTextBox.Designer.cs" />
+    <Compile Remove="Controls\SiteSelector.cs" />
+    <Compile Remove="Controls\SiteSelector.Designer.cs" />
+    <Compile Remove="Controls\SiteSelectorArticle.cs" />
+    <Compile Remove="Controls\SiteSelectorAudio.cs" />
+    <Compile Remove="Controls\SiteSelectorImgPost.cs" />
+    <Compile Remove="Main2.cs" />
+    <Compile Remove="Main2.Designer.cs" />
+    <Compile Remove="MCore\DataBase.cs" />
+    <Compile Remove="MCore\EventArgsOnShowWin.cs" />
+    <Compile Remove="MCore\ImgListItem.cs" />
+    <Compile Remove="MCore\IModules.cs" />
+    <Compile Remove="MCore\JobSettings.cs" />
+    <Compile Remove="MCore\ModuleUtils.cs" />
+    <Compile Remove="MCore\QueuFixed.cs" />
+    <Compile Remove="MCore\XsDockContent.cs" />
+    <Compile Remove="MCore\XsDockContent.Designer.cs" />
+    <Compile Remove="ModuleListPushBaseBak.cs" />
+    <Compile Remove="ModuleListPushBaseBak.Designer.cs" />
+    <Compile Remove="Modules\HelpMarkdownViewer.cs" />
+    <Compile Remove="Modules\HelpMarkdownViewer.Designer.cs" />
+    <Compile Remove="Modules\JobIndex\CreatCron.cs" />
+    <Compile Remove="Modules\JobIndex\CreatCron.Designer.cs" />
+    <Compile Remove="Modules\JobIndex\CustomConfigs.cs" />
+    <Compile Remove="Modules\JobIndex\CustomConfigs.Designer.cs" />
+    <Compile Remove="Modules\JobIndex\LastReport.cs" />
+    <Compile Remove="Modules\JobIndex\LastReport.Designer.cs" />
+    <Compile Remove="Modules\JobIndex\NextTime.cs" />
+    <Compile Remove="Modules\JobIndex\NextTime.Designer.cs" />
+    <Compile Remove="Modules\LangTrans.cs" />
+    <Compile Remove="Modules\LangTrans.Designer.cs" />
+    <Compile Remove="Modules\LLMChat.cs" />
+    <Compile Remove="Modules\LLMChat.Designer.cs" />
+    <Compile Remove="Modules\LLMChatBase.cs" />
+    <Compile Remove="Modules\LLMChatBase.Designer.cs" />
+    <Compile Remove="Modules\OriginalCheck.cs" />
+    <Compile Remove="Modules\OriginalCheck.Designer.cs" />
+    <Compile Remove="Modules\PushContent\AddArticle.cs" />
+    <Compile Remove="Modules\PushContent\AddArticle.Designer.cs" />
+    <Compile Remove="Modules\PushContent\AddAudio.cs" />
+    <Compile Remove="Modules\PushContent\AddAudio.Designer.cs" />
+    <Compile Remove="Modules\PushContent\AddImagePost.cs" />
+    <Compile Remove="Modules\PushContent\AddImagePost.Designer.cs" />
+    <Compile Remove="Modules\PushContent\AddVideo.cs" />
+    <Compile Remove="Modules\PushContent\AddVideo.Designer.cs" />
+    <Compile Remove="Modules\PushContent\DataReport.cs" />
+    <Compile Remove="Modules\PushContent\DataReport.Designer.cs" />
+    <Compile Remove="Modules\PushContent\ModuleMain - 复制.cs" />
+    <Compile Remove="Modules\PushContent\ModuleMain - 复制.Designer.cs" />
+    <Compile Remove="Modules\PushContent\SelArticle.cs" />
+    <Compile Remove="Modules\PushContent\SelArticle.Designer.cs" />
+    <Compile Remove="Modules\QuickRecorder.cs" />
+    <Compile Remove="Modules\QuickRecorder.Designer.cs" />
+    <Compile Remove="Modules\TextToVoice.cs" />
+    <Compile Remove="Modules\TextToVoice.Designer.cs" />
+    <Compile Remove="Modules\TxtToVoice.cs" />
+    <Compile Remove="Modules\TxtToVoice.Designer.cs" />
+    <Compile Remove="Modules\VideoToVideo.cs" />
+    <Compile Remove="Modules\VideoToVideo.Designer.cs" />
+    <Compile Remove="Modules\VideoToVoice.cs" />
+    <Compile Remove="Modules\VideoToVoice.Designer.cs" />
+    <Compile Remove="Modules\VideoWatermark.cs" />
+    <Compile Remove="Modules\VideoWatermark.Designer.cs" />
+    <Compile Remove="Modules\VoiceToText.cs" />
+    <Compile Remove="Modules\VoiceToText.Designer.cs" />
+    <Compile Remove="Modules\VoiceToVoice.cs" />
+    <Compile Remove="Modules\VoiceToVoice.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="About.resx" />
+    <EmbeddedResource Remove="Controls\AiServiceSelector.resx" />
+    <EmbeddedResource Remove="Controls\BaseForm.resx" />
+    <EmbeddedResource Remove="Controls\ClassCombox.resx" />
+    <EmbeddedResource Remove="Controls\ImageList.resx" />
+    <EmbeddedResource Remove="Controls\PublishTimer.resx" />
+    <EmbeddedResource Remove="Controls\PublishTimes.resx" />
+    <EmbeddedResource Remove="Controls\SettingCategories.resx" />
+    <EmbeddedResource Remove="Controls\SettingCheckBox.resx" />
+    <EmbeddedResource Remove="Controls\SettingComboBox.resx" />
+    <EmbeddedResource Remove="Controls\SettingCoverImage.resx" />
+    <EmbeddedResource Remove="Controls\SettingCtrBase.resx" />
+    <EmbeddedResource Remove="Controls\SettingSrtLrc.resx" />
+    <EmbeddedResource Remove="Controls\SettingTextBox.resx" />
+    <EmbeddedResource Remove="Controls\SiteSelector.resx" />
+    <EmbeddedResource Remove="Controls\SiteSelectorArticle.resx" />
+    <EmbeddedResource Remove="Controls\SiteSelectorImgPost.resx" />
+    <EmbeddedResource Remove="Main2.resx" />
+    <EmbeddedResource Remove="MCore\XsDockContent.resx" />
+    <EmbeddedResource Remove="ModuleListPushBaseBak.resx" />
+    <EmbeddedResource Remove="Modules\HelpMarkdownViewer.resx" />
+    <EmbeddedResource Remove="Modules\JobIndex\CreatCron.resx" />
+    <EmbeddedResource Remove="Modules\JobIndex\CustomConfigs.resx" />
+    <EmbeddedResource Remove="Modules\JobIndex\LastReport.resx" />
+    <EmbeddedResource Remove="Modules\JobIndex\NextTime.resx" />
+    <EmbeddedResource Remove="Modules\LangTrans.resx" />
+    <EmbeddedResource Remove="Modules\LLMChat.resx" />
+    <EmbeddedResource Remove="Modules\LLMChatBase.resx" />
+    <EmbeddedResource Remove="Modules\OriginalCheck.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\AddArticle.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\AddAudio.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\AddImagePost.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\AddVideo.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\DataReport.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\ModuleMain - 复制.resx" />
+    <EmbeddedResource Remove="Modules\PushContent\SelArticle.resx" />
+    <EmbeddedResource Remove="Modules\QuickRecorder.resx" />
+    <EmbeddedResource Remove="Modules\TextToVoice.resx" />
+    <EmbeddedResource Remove="Modules\TxtToVoice.resx" />
+    <EmbeddedResource Remove="Modules\VideoToVideo.resx" />
+    <EmbeddedResource Remove="Modules\VideoToVoice.resx" />
+    <EmbeddedResource Remove="Modules\VideoWatermark.resx" />
+    <EmbeddedResource Remove="Modules\VoiceToText.resx" />
+    <EmbeddedResource Remove="Modules\VoiceToVoice.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+    <Content Include="plugins\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DockPanelSuite" Version="3.1.1" />
+    <PackageReference Include="DockPanelSuite.ThemeVS2015" Version="3.1.1" />
+    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="RestSharp" Version="113.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ModuleList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ModuleListImagePost.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ModuleListArticle.cs" />
+    <Compile Update="ModuleListPushBase.cs" />
+    <Compile Update="Modules\AutoPushSite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ModuleListAudio.cs" />
+    <Compile Update="ModuleListVideo.cs" />
+    <Compile Update="Modules\AutoPushFromApi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Modules\PushContent\ImportDatas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Modules\PushContent\ModuleMain.cs" />
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="conf\conf.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="conf\log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\BaiJiaHao.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\BiliBili.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\BiliBili_A.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\DouYin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\KuaiSou.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\TaoTiaoHaoVideo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\WeiboVideo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\WeiXinSPH.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Categorys\ZhiHuVideo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Secrets\readme.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Datas\Secrets\yt_client_secret.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\nuget\microsoft.web.webview2\1.0.2849.39\build\\..\runtimes\win-x86\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\nuget\microsoft.web.webview2\1.0.2849.39\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\nuget\microsoft.web.webview2\1.0.2849.39\build\\..\runtimes\win-arm64\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\cqs_caches\nuget\microsoft.web.webview2\1.0.3650.58\build\\..\runtimes\win-x86\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\cqs_caches\nuget\microsoft.web.webview2\1.0.3650.58\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="D:\cqs_caches\nuget\microsoft.web.webview2\1.0.3650.58\build\\..\runtimes\win-arm64\native\WebView2Loader.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartMedia.Core\SmartMedia.Core.csproj" />
+  </ItemGroup>
+
+</Project>
