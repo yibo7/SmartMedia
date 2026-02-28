@@ -27,7 +27,7 @@
  
 
 ### 📥 下载与安装
-1.  **下载软件**：点击[此处](https://github.com/yibo7/SmartMedia/releases/download/1.0.0/SmartMedia-win64.zip)获取最新版本压缩包。
+1.  **下载软件**：点击[此处](https://github.com/yibo7/SmartMedia/releases)获取最新版本压缩包。
 2.  **解压文件**：将下载的压缩包解压至你选择的目录。
 3.  **启动程序**：进入解压后的文件夹，双击运行 `SmartMedia.exe`。
 4.  **安装运行环境**（如需要）：若首次运行提示缺少 .NET 环境，请按界面指引完成安装。
