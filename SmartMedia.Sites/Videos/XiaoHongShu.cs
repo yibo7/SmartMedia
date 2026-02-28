@@ -19,7 +19,7 @@ namespace SmartMedia.Sites.Videos
         override public Image IcoName => Resource.xiaohongshu;
         override public async Task<string> LoginAsync()
         {
-            return await LoginCustom("https://creator.xiaohongshu.com/login", "text=发布");
+            return await LoginCustom("https://creator.xiaohongshu.com/login", "text=发布笔记");
         }
         protected override async Task<string> ActionsAsync(PushInfo? model, IPage page, Action<string> CallBack)
         {

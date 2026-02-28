@@ -278,11 +278,32 @@ abstract public class PushBase : PluginBase
     }
 
     /// <summary>
-    /// 登录
-    /// </summary>
-    /// <param name="login_url">登录地址</param>
+    /// 等待元素出现或隐藏
+    /// </summary> 
     /// <param name="waitfor">等待出现的元素</param>
     /// <returns>返回空值 表示登录成功，否则错误</returns>
+    protected async Task<string> WaitForSelector(IPage page, string waitfor, WaitForSelectorState? VisibleState = WaitForSelectorState.Visible)
+    {
+        try
+        { 
+
+            await page.WaitForSelectorAsync(waitfor, new()
+            {
+                Timeout = 60000 * 10, // 10分钟
+                State = VisibleState // 默认确保元素可见或隐藏
+            });
+             
+        }
+        catch (Exception ex)
+        {
+
+            return $"登录Playwright发生异常：{ex.Message}";
+        }
+
+        return "";
+
+    }
+
     protected async Task<string> LoginCustom(string LoginPage, string waitfor, WaitForSelectorState? VisibleState = WaitForSelectorState.Visible)
     {
         try

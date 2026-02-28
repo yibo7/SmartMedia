@@ -26,8 +26,7 @@ public class TaoTiaoHao : ImagePushBase
         {
             return new Dictionary<string, SettingCtrBase>()
             {
-                //{ "SpecialName",BuildCtr<SettingTextBox>("合集名称","可为空，你在此平台上创建的合集名称") },
-                //{ "IsPushToArticle",BuildCtr<SettingCheckBox>("同时发布为文章", "发布得更多收益", "false") },
+               
                 { "IsFirst",BuildCtr<SettingCheckBox>("头条首发声明", "符合首发质量标准且72小时内仅在头条发布的内容，可享额外激励分成", "true") },
                 { "NoticeInfo",BuildCtr<SettingComboBox>("作品声明","默认为个人观点，如果需要声明，请选择声明项","个人观点，仅供参考","取材网络###虚构演绎，故事经历###个人观点，仅供参考###健康医疗分享，仅供参考###投资观点，仅供参考###引用AI") },
             };
@@ -78,7 +77,8 @@ public class TaoTiaoHao : ImagePushBase
         }
         CallBack("即将发布");
         await page.GetByRole(AriaRole.Button, new() { Name = "发布" }).ClickAsync();
-        await page.WaitForTimeoutAsync(3000);
+        await page.WaitForTimeoutAsync(2000);
+        await base.WaitForSelector(page, "span:text('审核中')");
 
         return "";
 
