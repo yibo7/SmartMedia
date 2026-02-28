@@ -202,13 +202,19 @@ namespace SmartMedia.Modules.VideoManageModule
                 return;
             }
 
-            long Id = sId.ToLong();
 
-            var model = dataBll.GetEntity(Id);
+            var ids = lvData.GetSelectItemKeys();
 
-            model.Status = 0;
+            foreach (var id in ids)
+            {
+                long Id = id.ToLong();
 
-            dataBll.Update(model);
+                var model = dataBll.GetEntity(Id);
+
+                model.Status = 0;
+
+                dataBll.Update(model);
+            } 
 
             this.BindData();
 
@@ -263,14 +269,17 @@ namespace SmartMedia.Modules.VideoManageModule
                 return;
             }
 
-            long Id = sId.ToLong();
+            var ids = lvData.GetSelectItemKeys();
 
-            var model = dataBll.GetEntity(Id);
+            foreach (var id in ids) {
+                long Id = id.ToLong();
 
-            model.Status = 1;
+                var model = dataBll.GetEntity(Id);
 
-            dataBll.Update(model);
+                model.Status = 1;
 
+                dataBll.Update(model);
+            } 
             this.BindData();
         }
 
