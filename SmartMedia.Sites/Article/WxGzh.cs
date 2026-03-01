@@ -61,7 +61,7 @@ namespace SmartMedia.Sites.Article
             string result = await publisher.PublishArticleAsync(
             title: model.Title,
             thumbMediaPath: model.ImgPath, // 提供本地图片路径，代码会自动上传
-            author: "尘年书香",
+            author: "cqs",
             //digest: digest,
             content: model.Info, 
             isToAll: true // 设置为 true 表示群发给所有用户

@@ -490,7 +490,8 @@ public class YouTube : VideoPushBase
     /// </summary>
     /// <returns></returns>
     override public async Task<string> LoginAsync()
-    { 
+    {
+        MessageBox.Show("如果是第一次点击此按钮YouTube将引导你登录网站.");
         bool ok = await youTube.AuthorizeAsync();
 
         return ok?"":"登录失败";

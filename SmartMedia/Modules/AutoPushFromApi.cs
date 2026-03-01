@@ -36,6 +36,15 @@ namespace SmartMedia.Modules
 
             txtDes.Text = "选择左边数据列表中的某条数据即可查看详情！";
 
+            if (autoPush.IsPushFromApi)
+            {
+                btnLogin.Text = "配置API";
+            }
+            else
+            {
+                btnLogin.Text = "登录网站";
+            }
+
             BindData();
         }
 
@@ -134,7 +143,7 @@ namespace SmartMedia.Modules
             string err = await AutoPush.LoginAsync();
             if (string.IsNullOrWhiteSpace(err))
             {
-                Tips("登录成功！");
+                //Tips("登录成功！");
             }
             else
             {
