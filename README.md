@@ -64,10 +64,11 @@
 - Bilibili (B站)
 - 小红书 (视频笔记)
 - YouTube **（基于官方API，管理更稳定）**
+- X(Twitter)**（基于官方API，自2026年2月开始需要充值积分才能使用）**
+- Facebook **（基于官方API，管理更稳定）**
 
 #### 🔄 待接入/优化
-- Instagram Reels
-- Facebook Reels
+- Instagram   
 - TikTok (国际版)
 
 ---
@@ -78,6 +79,8 @@
 - 微信公众号 **（基于官方API，管理更稳定）**
 - 小红书 (图文笔记)
 - 头条号(微头条)
+- X(Twitter)**（基于官方API，自2026年2月开始需要充值积分才能使用）**
+- Facebook **（基于官方API，管理更稳定）**
 
 #### 🔄 待接入/优化
 - 今日头条
