@@ -10,10 +10,10 @@ using System.Text.Json;
 
 namespace SmartMedia.Sites.ImagePosts;
 
-public class Twitter : ImagePushBase
+public class Facebook : ImagePushBase
 {
-    public override string PluginName => "Twitter";
-    override public Image IcoName => Resource.twitter;
+    public override string PluginName => "Facebook";
+    override public Image IcoName => Resource.facebook;
     protected override string UploadPage => "";
     /// <summary>
     /// UploadPage 与 DataPage为空，将视为API上传插件，打开平台时会有专门管理界面，否则将以平台后台页面为管理界面
@@ -26,7 +26,7 @@ public class Twitter : ImagePushBase
             return new Dictionary<string, SettingCtrBase>() { };
         }
     }
-    public Twitter()
+    public Facebook()
     {
         OnChangeSetting();
     }

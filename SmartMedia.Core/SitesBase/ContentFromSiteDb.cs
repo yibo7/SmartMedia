@@ -8,27 +8,27 @@ namespace SmartMedia.Core.SitesBase;
 [LiteTable("ContentFromSite")]// 获取平台上发布的内容持久化在本地，目前包括视频，音频，文章
 public class ContentFromSite : LiteModelBaseInt
 {/// <summary>
- /// 视频ID（唯一标识符）
+ /// 视频或文章ID（平台上的）
  /// </summary>
     public string VideoId { get; set; }
 
     /// <summary>
-    /// 视频标题
+    /// 标题-如果没有可获取Description中的第一句
     /// </summary>
     public string Title { get; set; }
 
     /// <summary>
-    /// 视频描述
+    /// 内容
     /// </summary>
     public string Description { get; set; }
 
     /// <summary>
-    /// 视频标签列表，多个用逗号分开
+    /// 视频标签列表，多个用#号分开
     /// </summary>
     public string Tags { get; set; }
 
     /// <summary>
-    /// 分类ID
+    /// 分类ID-如果没有可为空
     /// </summary>
     public string CategoryId { get; set; }
 
@@ -38,7 +38,7 @@ public class ContentFromSite : LiteModelBaseInt
     public DateTime? PublishedAt { get; set; }
 
     /// <summary>
-    /// 默认缩略图信息
+    /// 默认缩略图信息-如果没有可为空
     /// </summary>
     public string ThumbnailDefaultUrl { get; set; }
 

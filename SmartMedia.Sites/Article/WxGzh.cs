@@ -74,7 +74,7 @@ namespace SmartMedia.Sites.Article
          
 
         /// <summary>
-        /// 获取当前用户在公众号上已发布的内容列表
+        /// 获取当前用户已发布的内容列表
         /// </summary>
         /// <param name="limit">获取数量，取值范围1-20</param>
         /// <returns>文章列表</returns>

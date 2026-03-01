@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace SmartMedia.Sites.Utils.Twitter;
 
@@ -33,13 +31,6 @@ public class TwitterXClient : IDisposable
     private const string ApiV1BaseUrl = "https://api.twitter.com/1.1";
     private const string ApiV2BaseUrl = "https://api.twitter.com/2";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="apiKey">Consumer Key</param>
-    /// <param name="apiSecret">Secret Key（即 Consumer Secret）</param>
-    /// <param name="accessToken"></param>
-    /// <param name="accessSecret"></param>
     public TwitterXClient(string apiKey, string apiSecret, string accessToken, string accessSecret)
     {
         _apiKey = apiKey;
@@ -322,18 +313,28 @@ public class TwitterXClient : IDisposable
     #region 统计数据
 
     /// <summary>
-    /// 获取用户账号统计（粉丝数、关注数、推文数等）
+    /// 获取当前授权账号的统计数据（免费）
+    /// 内部使用 /users/me 接口，Free 套餐可用
+    /// 注意：Free 套餐无法查询其他用户的统计数据，需升级至 Basic 套餐
     /// </summary>
-    public async Task<UserMetrics> GetUserMetricsAsync(string userId)
+    public async Task<UserMetrics> GetUserMetricsAsync(string? userId = null)
     {
-        string url = $"{ApiV2BaseUrl}/users/{userId}?user.fields=public_metrics,created_at,name,username";
+        // 使用 /users/me，Free 套餐免费且返回完整 public_metrics
+        string url = $"{ApiV2BaseUrl}/users/me?user.fields=public_metrics,created_at,name,username";
         var doc = await GetV2Async(url);
         var data = doc.GetProperty("data");
+
+        string myId = data.GetProperty("id").GetString()!;
+
+        // 如果指定了 userId 且不是自己，明确提示需要付费套餐
+        if (userId != null && userId != myId)
+            throw new TwitterException(
+                $"Free 套餐不支持查询其他用户（userId={userId}）的统计数据，请升级至 Basic 套餐。", 402);
 
         var metrics = data.GetProperty("public_metrics");
         return new UserMetrics
         {
-            UserId = data.GetProperty("id").GetString()!,
+            UserId = myId,
             Name = data.GetProperty("name").GetString()!,
             Username = data.GetProperty("username").GetString()!,
             FollowersCount = metrics.GetProperty("followers_count").GetInt64(),
@@ -500,12 +501,18 @@ public class TwitterXClient : IDisposable
         byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
         string base64 = Convert.ToBase64String(imageBytes);
 
-        var body = new Dictionary<string, string> { ["media_data"] = base64 };
-        var authHeader = BuildOAuthHeader("POST", url, new Dictionary<string, string>());
-        var request = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-            Content = new FormUrlEncodedContent(body)
-        };
+        // ✅ 修复：表单参数必须参与 OAuth 1.0a 签名
+        // media_data 字段内容较大，签名时传入会导致 base string 过长，
+        // upload.twitter.com 官方推荐：简单上传时只签名空参数，
+        // 改用 multipart/form-data 避免签名参数冲突
+        var sigParams = new Dictionary<string, string>(); // 不含 media_data，符合官方建议
+        var authHeader = BuildOAuthHeader("POST", url, sigParams);
+
+        // 使用 multipart/form-data 上传，比 base64 FormUrlEncoded 更稳定
+        using var form = new MultipartFormDataContent();
+        form.Add(new ByteArrayContent(imageBytes), "media", Path.GetFileName(filePath));
+
+        var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = form };
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
 
         var response = await _http.SendAsync(request);
@@ -523,65 +530,246 @@ public class TwitterXClient : IDisposable
         byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
         string mimeType = GetMimeType(filePath);
 
-        // INIT
-        var initBody = new Dictionary<string, string>
+        // ── INIT ────────────────────────────────────────────────
+        var initParams = new Dictionary<string, string>
         {
             ["command"] = "INIT",
             ["total_bytes"] = fileBytes.Length.ToString(),
             ["media_type"] = mimeType,
             ["media_category"] = "tweet_image"
         };
-        var authHeader = BuildOAuthHeader("POST", url, new Dictionary<string, string>());
+        // ✅ 修复：表单参数传入签名
+        var authHeader = BuildOAuthHeader("POST", url, initParams);
         var initReq = new HttpRequestMessage(HttpMethod.Post, url)
         {
-            Content = new FormUrlEncodedContent(initBody)
+            Content = new FormUrlEncodedContent(initParams)
         };
         initReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         var initResp = await _http.SendAsync(initReq);
-        var initJson = JsonDocument.Parse(await initResp.Content.ReadAsStringAsync());
-        string mediaId = initJson.RootElement.GetProperty("media_id_string").GetString()!;
+        string initJson = await initResp.Content.ReadAsStringAsync();
+        if (!initResp.IsSuccessStatusCode)
+            throw new TwitterException($"分块上传 INIT 失败: {initJson}", (int)initResp.StatusCode);
 
-        // APPEND（每块 ≤ 5MB）
+        string mediaId = JsonDocument.Parse(initJson)
+            .RootElement.GetProperty("media_id_string").GetString()!;
+
+        // ── APPEND（每块 ≤ 5MB，media_data 不参与签名）──────────
         int chunkSize = 5 * 1024 * 1024;
         int segIndex = 0;
         for (int offset = 0; offset < fileBytes.Length; offset += chunkSize)
         {
             byte[] chunk = fileBytes.Skip(offset).Take(chunkSize).ToArray();
-            var appendBody = new Dictionary<string, string>
+            string chunkB64 = Convert.ToBase64String(chunk);
+
+            // APPEND 签名只含 command/media_id/segment_index，不含 media_data
+            var appendSigParams = new Dictionary<string, string>
             {
                 ["command"] = "APPEND",
                 ["media_id"] = mediaId,
-                ["segment_index"] = segIndex.ToString(),
-                ["media_data"] = Convert.ToBase64String(chunk)
+                ["segment_index"] = segIndex.ToString()
             };
-            authHeader = BuildOAuthHeader("POST", url, new Dictionary<string, string>());
+            authHeader = BuildOAuthHeader("POST", url, appendSigParams);
+
+            // 发送时包含 media_data，但不在签名里
+            var appendBody = new Dictionary<string, string>(appendSigParams)
+            {
+                ["media_data"] = chunkB64
+            };
             var appendReq = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new FormUrlEncodedContent(appendBody)
             };
             appendReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
-            await _http.SendAsync(appendReq);
+            var appendResp = await _http.SendAsync(appendReq);
+            if (!appendResp.IsSuccessStatusCode)
+            {
+                string appendErr = await appendResp.Content.ReadAsStringAsync();
+                throw new TwitterException($"分块上传 APPEND 失败 (段 {segIndex}): {appendErr}", (int)appendResp.StatusCode);
+            }
             segIndex++;
         }
 
-        // FINALIZE
-        var finalBody = new Dictionary<string, string>
+        // ── FINALIZE ────────────────────────────────────────────
+        var finalParams = new Dictionary<string, string>
         {
             ["command"] = "FINALIZE",
             ["media_id"] = mediaId
         };
-        authHeader = BuildOAuthHeader("POST", url, new Dictionary<string, string>());
+        // ✅ 修复：表单参数传入签名
+        authHeader = BuildOAuthHeader("POST", url, finalParams);
         var finalReq = new HttpRequestMessage(HttpMethod.Post, url)
         {
-            Content = new FormUrlEncodedContent(finalBody)
+            Content = new FormUrlEncodedContent(finalParams)
         };
         finalReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         var finalResp = await _http.SendAsync(finalReq);
         if (!finalResp.IsSuccessStatusCode)
-            throw new TwitterException($"分块上传 FINALIZE 失败", (int)finalResp.StatusCode);
+        {
+            string finalErr = await finalResp.Content.ReadAsStringAsync();
+            throw new TwitterException($"分块上传 FINALIZE 失败: {finalErr}", (int)finalResp.StatusCode);
+        }
 
         return mediaId;
     }
+
+    #endregion
+
+
+    #region 发布小视频推特
+
+    /// <summary>
+    /// 上传 MP4 视频（分块上传，带进度回调）
+    /// 流程：INIT → APPEND（每块5MB）→ FINALIZE → 轮询等待处理完成
+    /// </summary>
+    public async Task<string> UploadVideoAsync(string filePath, Action<string>? callBack = null)
+    {
+        string url = $"{UploadBaseUrl}/media/upload.json";
+        byte[] bytes = await File.ReadAllBytesAsync(filePath);
+        long totalBytes = bytes.Length;
+
+        // ── INIT ─────────────────────────────────────────────
+        var initParams = new Dictionary<string, string>
+        {
+            ["command"] = "INIT",
+            ["total_bytes"] = totalBytes.ToString(),
+            ["media_type"] = "video/mp4",
+            ["media_category"] = "tweet_video"  // 视频必须用 tweet_video，否则处理失败
+        };
+        var authHeader = BuildOAuthHeader("POST", url, initParams);
+        var initReq = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = new FormUrlEncodedContent(initParams)
+        };
+        initReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
+
+        var initResp = await _http.SendAsync(initReq);
+        string initJson = await initResp.Content.ReadAsStringAsync();
+        if (!initResp.IsSuccessStatusCode)
+            throw new TwitterException($"视频上传 INIT 失败: {initJson}", (int)initResp.StatusCode);
+
+        string mediaId = JsonDocument.Parse(initJson)
+            .RootElement.GetProperty("media_id_string").GetString()!;
+        callBack?.Invoke($"INIT 完成，开始分块上传...");
+
+        // ── APPEND（每块 5MB）────────────────────────────────
+        int chunkSize = 5 * 1024 * 1024;
+        int segIndex = 0;
+        int totalSegs = (int)Math.Ceiling((double)totalBytes / chunkSize);
+
+        for (int offset = 0; offset < totalBytes; offset += chunkSize)
+        {
+            byte[] chunk = bytes.Skip(offset).Take(chunkSize).ToArray();
+            string chunkB64 = Convert.ToBase64String(chunk);
+
+            // media_data 不参与签名（体积太大），只签名其他三个字段
+            var appendSigParams = new Dictionary<string, string>
+            {
+                ["command"] = "APPEND",
+                ["media_id"] = mediaId,
+                ["segment_index"] = segIndex.ToString()
+            };
+            authHeader = BuildOAuthHeader("POST", url, appendSigParams);
+
+            var appendBody = new Dictionary<string, string>(appendSigParams)
+            {
+                ["media_data"] = chunkB64
+            };
+            var appendReq = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new FormUrlEncodedContent(appendBody)
+            };
+            appendReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
+
+            var appendResp = await _http.SendAsync(appendReq);
+            if (!appendResp.IsSuccessStatusCode)
+            {
+                string err = await appendResp.Content.ReadAsStringAsync();
+                throw new TwitterException($"视频上传 APPEND 失败 (段 {segIndex}): {err}", (int)appendResp.StatusCode);
+            }
+
+            callBack?.Invoke($"上传进度：{segIndex + 1}/{totalSegs} 块");
+            segIndex++;
+        }
+
+        // ── FINALIZE ──────────────────────────────────────────
+        var finalParams = new Dictionary<string, string>
+        {
+            ["command"] = "FINALIZE",
+            ["media_id"] = mediaId
+        };
+        authHeader = BuildOAuthHeader("POST", url, finalParams);
+        var finalReq = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = new FormUrlEncodedContent(finalParams)
+        };
+        finalReq.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
+
+        var finalResp = await _http.SendAsync(finalReq);
+        string finalJson = await finalResp.Content.ReadAsStringAsync();
+        if (!finalResp.IsSuccessStatusCode)
+            throw new TwitterException($"视频上传 FINALIZE 失败: {finalJson}", (int)finalResp.StatusCode);
+
+        // ── 轮询等待视频处理完成（X 后台转码需要时间）────────
+        callBack?.Invoke("视频上传完成，等待 X 服务器处理转码...");
+        await WaitForVideoProcessingAsync(mediaId, callBack);
+
+        return mediaId;
+    }
+
+    /// <summary>
+    /// 轮询等待 X 后台视频转码完成
+    /// </summary>
+    private async Task WaitForVideoProcessingAsync(string mediaId, Action<string>? callBack = null)
+    {
+        string url = $"{UploadBaseUrl}/media/upload.json?command=STATUS&media_id={mediaId}";
+        int retries = 0;
+        int maxWait = 60; // 最多等待 60 秒
+
+        while (retries < maxWait)
+        {
+            await Task.Delay(3000); // 每 3 秒查询一次
+
+            var queryParams = ParseQueryParams(url);
+            var authHeader = BuildOAuthHeader("GET", CleanUrl(url), queryParams);
+            var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
+
+            var resp = await _http.SendAsync(req);
+            string json = await resp.Content.ReadAsStringAsync();
+
+            if (!resp.IsSuccessStatusCode) break;
+
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            if (!root.TryGetProperty("processing_info", out var info)) break;
+
+            string state = info.GetProperty("state").GetString()!;
+            int pct = info.TryGetProperty("progress_percent", out var p) ? p.GetInt32() : 0;
+
+            callBack?.Invoke($"视频处理中：{state}（{pct}%）");
+
+            if (state == "succeeded") return;
+            if (state == "failed")
+                throw new TwitterException("X 服务器视频转码失败，请检查视频格式", 422);
+
+            retries++;
+        }
+    }
+
+    /// <summary>
+    /// 使用已有 media_id 发布推文（适用于视频/图片上传后）
+    /// </summary>
+    public async Task<TweetResult> PostTweetWithMediaIdAsync(string text, string mediaId)
+    {
+        string url = $"{ApiV2BaseUrl}/tweets";
+        var payload = new Dictionary<string, object>
+        {
+            ["text"] = text,
+            ["media"] = new { media_ids = new[] { mediaId } }
+        };
+        return await PostTweetRequestAsync(url, payload);
+    } 
 
     #endregion
 
@@ -644,7 +832,9 @@ public class TwitterXClient : IDisposable
 
     private async Task<JsonElement> GetV2Async(string url)
     {
-        var authHeader = BuildOAuthHeader("GET", CleanUrl(url), new Dictionary<string, string>());
+        // OAuth 1.0a 规范：查询参数必须参与签名，不能只用去掉参数后的 base URL
+        var queryParams = ParseQueryParams(url);
+        var authHeader = BuildOAuthHeader("GET", CleanUrl(url), queryParams);
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
 
@@ -658,7 +848,9 @@ public class TwitterXClient : IDisposable
 
     private async Task<JsonElement> PostJsonV2Async(string url, string jsonBody)
     {
-        var authHeader = BuildOAuthHeader("POST", CleanUrl(url), new Dictionary<string, string>());
+        // POST + JSON body：body 内容不参与 OAuth 签名，但 URL 查询参数需要参与
+        var queryParams = ParseQueryParams(url);
+        var authHeader = BuildOAuthHeader("POST", CleanUrl(url), queryParams);
         var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
             Content = new StringContent(jsonBody, Encoding.UTF8, "application/json")
@@ -714,6 +906,27 @@ public class TwitterXClient : IDisposable
     {
         int idx = url.IndexOf('?');
         return idx >= 0 ? url[..idx] : url;
+    }
+
+    /// <summary>
+    /// 解析 URL 中的查询参数，用于 OAuth 1.0a 签名
+    /// </summary>
+    private static Dictionary<string, string> ParseQueryParams(string url)
+    {
+        var result = new Dictionary<string, string>();
+        int idx = url.IndexOf('?');
+        if (idx < 0) return result;
+
+        string query = url[(idx + 1)..];
+        foreach (var part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            int eq = part.IndexOf('=');
+            if (eq < 0) continue;
+            string key = Uri.UnescapeDataString(part[..eq]);
+            string val = Uri.UnescapeDataString(part[(eq + 1)..]);
+            result[key] = val;
+        }
+        return result;
     }
 
     private static string GetMimeType(string path) =>

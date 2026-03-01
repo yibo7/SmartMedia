@@ -8,9 +8,9 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
-namespace SmartMedia.Sites.ImagePosts;
+namespace SmartMedia.Sites.Videos;
 
-public class Twitter : ImagePushBase
+public class Twitter : VideoPushBase
 {
     public override string PluginName => "Twitter";
     override public Image IcoName => Resource.twitter;
@@ -140,17 +140,23 @@ public class Twitter : ImagePushBase
     {
         try
         {
-            CallBack("获取推文图片路径");
-            string[] imgPaths = base.GetCoverPaths(model);
-            if (imgPaths.Length < 1)
-                CallBack("没有可上传的图片，将发布纯文字推文");
+            string sVideoPath = model.FilePath; // 视频的本地路径
+
+            // ── 校验视频文件 ──────────────────────────────────
+            if (string.IsNullOrWhiteSpace(sVideoPath) || !File.Exists(sVideoPath))
+                return "视频文件不存在，已跳过发布";
+
+            if (!Path.GetExtension(sVideoPath).ToLower().Equals(".mp4"))
+                return $"仅支持 MP4 格式，当前文件：{Path.GetFileName(sVideoPath)}";
+
+            long fileSizeMb = new FileInfo(sVideoPath).Length / 1024 / 1024;
+            CallBack($"找到视频：{Path.GetFileName(sVideoPath)}（{fileSizeMb} MB）");
 
             // ── 拼接 Hashtag ──────────────────────────────────
             List<string> tags = model.TagList();
             string hashTags = string.Empty;
             if (tags?.Count > 0)
             {
-                // 过滤空值，去掉 tag 本身已有的 # 号再统一加上
                 hashTags = string.Join(" ", tags
                     .Where(t => !string.IsNullOrWhiteSpace(t))
                     .Select(t => "#" + t.TrimStart('#').Trim()));
@@ -168,7 +174,6 @@ public class Twitter : ImagePushBase
             if (!string.IsNullOrWhiteSpace(model.Info))
                 sb.AppendLine(model.Info.Trim());
 
-            // Hashtag 追加到末尾（与正文空一行）
             if (!string.IsNullOrWhiteSpace(hashTags))
             {
                 sb.AppendLine();
@@ -177,13 +182,10 @@ public class Twitter : ImagePushBase
 
             string tweetText = sb.ToString().Trim();
 
-            // X 推文最多 280 字符，超出时优先保留正文，截断 Hashtag
+            // 超长截断，优先保留正文
             if (tweetText.Length > 280)
             {
-                // 先尝试去掉 Hashtag 看是否够用
-                string textWithoutTags = sb.ToString()
-                    .Replace(hashTags, "").Trim();
-
+                string textWithoutTags = sb.ToString().Replace(hashTags, "").Trim();
                 if (textWithoutTags.Length <= 280)
                 {
                     tweetText = textWithoutTags;
@@ -201,43 +203,17 @@ public class Twitter : ImagePushBase
 
             CallBack($"推文内容准备完成，共 {tweetText.Length} 字符，标签：{(string.IsNullOrEmpty(hashTags) ? "无" : hashTags)}");
 
-            // ── 发布推文 ──────────────────────────────────────
-            TweetResult result;
+            // ── 第一步：分块上传视频 ───────────────────────────
+            CallBack($"开始上传视频（{fileSizeMb} MB），请耐心等待...");
+            string mediaId = await client.UploadVideoAsync(sVideoPath, CallBack);
+            CallBack($"视频上传完成，media_id：{mediaId}");
 
-            if (imgPaths.Length > 0)
-            {
-                bool hasGif = imgPaths.Any(p =>
-                    Path.GetExtension(p).ToLower() == ".gif");
+            // ── 第二步：发布带视频的推文 ──────────────────────
+            CallBack("正在发布视频推文...");
+            TweetResult result = await client.PostTweetWithMediaIdAsync(tweetText, mediaId);
+            CallBack($"视频推文发布成功，推文 ID：{result.TweetId}");
 
-                var validPaths = hasGif
-                    ? imgPaths.Where(p => Path.GetExtension(p).ToLower() == ".gif")
-                              .Take(1).ToArray()
-                    : imgPaths.Where(File.Exists)
-                              .Take(4).ToArray();
-
-                if (hasGif) CallBack("检测到 GIF，仅上传第 1 张");
-
-                if (validPaths.Length > 0)
-                {
-                    CallBack($"开始上传图片（共 {validPaths.Length} 张）");
-                    result = await client.PostTweetWithImagesAsync(tweetText, validPaths);
-                    CallBack($"图文推文发布成功，推文 ID：{result.TweetId}");
-                }
-                else
-                {
-                    CallBack("图片文件不存在，改为发布纯文字推文");
-                    result = await client.PostTweetAsync(tweetText);
-                    CallBack($"纯文字推文发布成功，推文 ID：{result.TweetId}");
-                }
-            }
-            else
-            {
-                CallBack("开始发布纯文字推文");
-                result = await client.PostTweetAsync(tweetText);
-                CallBack($"纯文字推文发布成功，推文 ID：{result.TweetId}");
-            }
-
-            return "";//result.TweetId
+            return ""; // 返回空表示成功，如需返回 ID 改为 result.TweetId
         }
         catch (TwitterException ex)
         {
@@ -251,7 +227,7 @@ public class Twitter : ImagePushBase
             CallBack(msg);
             return msg;
         }
-    } 
+    }
 
 
     #region 获取推广
@@ -400,6 +376,16 @@ public class Twitter : ImagePushBase
 > 适用于 · OAuth 1.0a · X API v2
 
 推文发布规则：推文内容不能超过280个字，图片不能超过4张，gif图片只能发一张，视频只能发一条。
+
+**X 对视频的要求：**
+
+| 项目 | 要求 |
+|---|---|
+| 格式 | MP4（H.264 编码）|
+| 最大文件 | 512 MB |
+| 最长时长 | 140 秒 |
+| 最小分辨率 | 32×32 |
+| 最大分辨率 | 1920×1200 |
 
 ---
 

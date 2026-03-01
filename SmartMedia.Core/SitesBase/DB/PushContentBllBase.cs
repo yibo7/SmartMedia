@@ -239,7 +239,7 @@ abstract public class PushContentBllBase<TPush, ISiteSelector> : LiteDbInt<PushI
         }
 
         string sMd5 = ""; 
-        if (string.IsNullOrWhiteSpace(model.FilePath) && (IType == 1 || IType == 2 || IType == 4))
+        if (string.IsNullOrWhiteSpace(model.FilePath) && (IType == 1 || IType == 2))
         {
             sMd5 = model.FilePath.Md5();
             string tip = "路径不能为空";
@@ -251,9 +251,9 @@ abstract public class PushContentBllBase<TPush, ISiteSelector> : LiteDbInt<PushI
                 case 2:
                     tip = "音频路径不能为空";
                     break;
-                case 4:
-                    tip = "需要添加图片集";
-                    break;
+                //case 4: 不一定需要图片
+                //    tip = "需要添加图片集";
+                //    break;
                 default:
                     break;
             }
